@@ -10917,3 +10917,75 @@ footer.footer {
   padding-top: 4rem;
   padding-bottom: 4rem;
 }
+
+:root {
+  --azul-escuro: #063b78;
+  --azul-principal: #0f6fc6;
+  --azul-claro: #dcefff;
+}
+
+body {
+  background-color: #f5f9ff;
+}
+
+.navbar {
+  background-color: rgba(255, 255, 255, 0.96) !important;
+}
+
+header.masthead {
+  min-height: 560px;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(
+    135deg,
+    var(--azul-escuro) 0%,
+    var(--azul-principal) 65%,
+    #43a5e8 100%
+  );
+}
+
+header.masthead::before,
+.call-to-action::before {
+  opacity: 0;
+}
+
+header.masthead h1 {
+  font-weight: 700;
+  font-size: clamp(2.2rem, 5vw, 4.2rem);
+}
+
+header.masthead .lead {
+  max-width: 700px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.features-icons-item {
+  background: #ffffff;
+  padding: 2rem 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(6, 59, 120, 0.10);
+}
+
+.features-icons-icon i {
+  font-size: 3rem;
+}
+
+.call-to-action {
+  background: linear-gradient(
+    135deg,
+    var(--azul-escuro),
+    var(--azul-principal)
+  );
+}
+
+.btn-primary {
+  border: 0;
+  border-radius: 10px;
+  padding: 0.8rem 1.6rem;
+  background-color: #084b96;
+}
+
+.btn-primary:hover {
+  background-color: #063b78;
+}
