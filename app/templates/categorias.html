@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Categorias | Conheça Pureza{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+  <h1 class="text-center mb-4">Escolha uma categoria</h1>
+
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="card p-3">
+        <h2 class="h4">História</h2>
+        <p>Conheça fatos importantes sobre Pureza/RN.</p>
+        <a href="/quiz" class="btn btn-primary">Começar</a>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card p-3">
+        <h2 class="h4">Cultura</h2>
+        <p>Teste seus conhecimentos sobre tradições locais.</p>
+        <a href="/quiz" class="btn btn-primary">Começar</a>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card p-3">
+        <h2 class="h4">Geografia</h2>
+        <p>Descubra mais sobre o município.</p>
+        <a href="/quiz" class="btn btn-primary">Começar</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

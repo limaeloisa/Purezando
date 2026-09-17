@@ -1,0 +1,32 @@
+# Ambiente virtual
+venv/
+.venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Credenciais
+.env
+.env.*
+
+# Flask
+instance/
+
+# Banco SQLite local, caso exista durante testes
+*.sqlite
+*.sqlite3
+*.db
+
+# Testes e logs
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+
+# Editor e sistema
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Conheça Pureza | Quiz Educativo</title>
+
+  <link
+    rel="icon"
+    type="image/x-icon"
+    href="{{ url_for('static', filename='public/assets/favicon.ico') }}"
+  >
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+    rel="stylesheet"
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic"
+    rel="stylesheet"
+  >
+
+  <link
+    href="{{ url_for('static', filename='public/css/styles.css') }}"
+    rel="stylesheet"
+  >
+</head>
+
+<body>
+<a class="navbar-brand" href="/">
+  <img
+    src="{{ url_for('static', filename='public/assets/img/purezando.svg') }}"
+    alt="Purezando"
+    style="height: 48px; max-width: 180px;"
+  >
+</a>
+
+      <div>
+        <a class="btn btn-outline-primary me-2" href="/ranking">
+          Ranking
+        </a>
+
+        <a class="btn btn-primary" href="/login">
+          Entrar
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="masthead">
+    <div class="container position-relative">
+      <div class="row justify-content-center">
+        <div class="col-xl-8">
+          <div class="text-center text-white">
+            <h1 class="mb-4">
+              Quanto você conhece Pureza/RN?
+            </h1>
+
+            <p class="lead mb-4">
+              Teste seus conhecimentos sobre a história, cultura,
+              geografia, comunidades e curiosidades do município.
+            </p>
+
+            <a href="/categorias" class="btn btn-primary btn-lg px-5">
+              Começar quiz
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="features-icons bg-light text-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+            <div class="features-icons-icon d-flex">
+              <i class="bi-book m-auto text-primary"></i>
+            </div>
+
+            <h3>Aprenda jogando</h3>
+
+            <p class="lead mb-0">
+              Descubra informações sobre Pureza/RN de forma leve,
+              interativa e divertida.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+            <div class="features-icons-icon d-flex">
+              <i class="bi-grid-3x3-gap m-auto text-primary"></i>
+            </div>
+
+            <h3>Escolha uma categoria</h3>
+
+            <p class="lead mb-0">
+              Responda perguntas sobre história, cultura, geografia
+              e curiosidades locais.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="features-icons-item mx-auto mb-0 mb-lg-3">
+            <div class="features-icons-icon d-flex">
+              <i class="bi-trophy m-auto text-primary"></i>
+            </div>
+
+            <h3>Confira seu resultado</h3>
+
+            <p class="lead mb-0">
+              Acompanhe seus acertos, sua pontuação e sua posição no ranking.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="showcase">
+    <div class="container-fluid p-0">
+      <div class="row g-0">
+        <div
+          class="col-lg-6 order-lg-2 text-white showcase-img"
+          style="background-image: url('{{ url_for('static', filename='public/assets/img/bg-showcase-1.jpg') }}')"
+        ></div>
+
+        <div class="col-lg-6 order-lg-1 my-auto showcase-text">
+          <h2>História de Pureza</h2>
+
+          <p class="lead mb-0">
+            Conheça fatos importantes, origens e acontecimentos
+            que fazem parte da história do município.
+          </p>
+        </div>
+      </div>
+
+      <div class="row g-0">
+        <div
+          class="col-lg-6 text-white showcase-img"
+          style="background-image: url('{{ url_for('static', filename='public/assets/img/bg-showcase-2.jpg') }}')"
+        ></div>
+
+        <div class="col-lg-6 my-auto showcase-text">
+          <h2>Cultura e comunidades</h2>
+
+          <p class="lead mb-0">
+            Descubra tradições, costumes, comunidades e características
+            que ajudam a contar a identidade de Pureza/RN.
+          </p>
+        </div>
+      </div>
+
+      <div class="row g-0">
+        <div
+          class="col-lg-6 order-lg-2 text-white showcase-img"
+          style="background-image: url('{{ url_for('static', filename='public/assets/img/bg-showcase-3.jpg') }}')"
+        ></div>
+
+        <div class="col-lg-6 order-lg-1 my-auto showcase-text">
+          <h2>Teste seus conhecimentos</h2>
+
+          <p class="lead mb-0">
+            Escolha uma categoria, responda às perguntas e veja
+            quanto você sabe sobre o município.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="testimonials text-center bg-light">
+    <div class="container">
+      <h2 class="mb-5">Categorias do quiz</h2>
+
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+            <i class="bi-clock-history text-primary display-4"></i>
+
+            <h5 class="mt-3">História</h5>
+
+            <p class="font-weight-light mb-0">
+              Perguntas sobre acontecimentos e origens de Pureza/RN.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+            <i class="bi-people text-primary display-4"></i>
+
+            <h5 class="mt-3">Cultura</h5>
+
+            <p class="font-weight-light mb-0">
+              Perguntas sobre tradições, costumes e comunidades locais.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+            <i class="bi-geo-alt text-primary display-4"></i>
+
+            <h5 class="mt-3">Geografia</h5>
+
+            <p class="font-weight-light mb-0">
+              Perguntas sobre localização, território e curiosidades da cidade.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="call-to-action text-white text-center">
+    <div class="container position-relative">
+      <div class="row justify-content-center">
+        <div class="col-xl-8">
+          <h2 class="mb-4">Pronto para começar?</h2>
+
+          <p class="lead mb-4">
+            Entre no quiz e descubra mais sobre Pureza/RN.
+          </p>
+
+          <a href="/categorias" class="btn btn-primary btn-lg px-5">
+            Iniciar agora
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 h-100 text-center text-lg-start my-auto">
+          <ul class="list-inline mb-2">
+            <li class="list-inline-item">
+              <a href="/">Início</a>
+            </li>
+
+            <li class="list-inline-item">⋅</li>
+
+            <li class="list-inline-item">
+              <a href="/categorias">Quiz</a>
+            </li>
+
+            <li class="list-inline-item">⋅</li>
+
+            <li class="list-inline-item">
+              <a href="/ranking">Ranking</a>
+            </li>
+          </ul>
+
+          <p class="text-muted small mb-4 mb-lg-0">
+            &copy; 2026 Conheça Pureza — Quiz Educativo.
+          </p>
+        </div>
+
+        <div class="col-lg-6 h-100 text-center text-lg-end my-auto">
+          <p class="text-muted small mb-0">
+            Layout baseado no template Landing Page do Start Bootstrap.
+          </p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script src="{{ url_for('static', filename='public/js/scripts.js') }}"></script>
+</body>
+</html>

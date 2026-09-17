@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>{% block title %}Conheça Pureza{% endblock %}</title>
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+
+  {% block css %}{% endblock %}
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url_for('inicio') }}">
+        Conheça Pureza
+      </a>
+
+      <div>
+        <a class="text-white me-3" href="{{ url_for('categorias') }}">
+          Quiz
+        </a>
+        <a class="text-white" href="{{ url_for('ranking') }}">
+          Ranking
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="bg-dark text-white text-center py-3 mt-5">
+    Quiz Educativo sobre Pureza/RN
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+  {% block js %}{% endblock %}
+</body>
+</html>
