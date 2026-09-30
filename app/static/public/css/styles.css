@@ -21,7 +21,7 @@ body {
   text-align: var(--bs-body-text-align);
   background-color: var(--bs-body-bg);
   -webkit-text-size-adjust: 100%;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: rgb(243, 235, 235);
 }
 
 hr {
@@ -10838,74 +10838,188 @@ footer.footer {
   padding-bottom: 4rem;
 }
 
+
 :root {
   --azul-escuro: #063b78;
   --azul-principal: #0f6fc6;
   --azul-claro: #dcefff;
+  --azul-suave: #f5f9ff;
+  --branco: #ffffff;
 }
 
+/* Corpo da página */
 body {
-  background-color: #f5f9ff;
+  background-color: var(--azul-suave);
+  color: #26364a;
 }
 
+/* Navbar */
 .navbar {
-  background-color: rgba(255, 255, 255, 0.96) !important;
+  background-color: rgba(255, 255, 255, 0.97) !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
+/* Cabeçalho principal */
 header.masthead {
-  min-height: 560px;
+  min-height: 600px;
   display: flex;
   align-items: center;
+
   background: linear-gradient(
     135deg,
-    var(--azul-escuro) 0%,
-    var(--azul-principal) 65%,
-    #43a5e8 100%
+    var(--azul-escuro),
+    var(--azul-principal),
+    #43a5e8
   );
+
+  position: relative;
+  overflow: hidden;
 }
 
-header.masthead::before,
-.call-to-action::before {
-  opacity: 0;
-}
 
-header.masthead h1 {
-  font-weight: 700;
-  font-size: clamp(2.2rem, 5vw, 4.2rem);
-}
-
-header.masthead .lead {
-  max-width: 700px;
-  margin-right: auto;
-  margin-left: auto;
-}
-
+/* Cards */
 .features-icons-item {
-  background: #ffffff;
-  padding: 2rem 1.5rem;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(6, 59, 120, 0.10);
+  background: var(--branco);
+  padding: 2.5rem 1.8rem;
+  border-radius: 18px;
+
+  box-shadow: 0 8px 25px rgba(6, 59, 120, 0.10);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
+.features-icons-item:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(6, 59, 120, 0.18);
+}
+.features-img-item.accordion-purezando:hover {
+    transform: translateY(-30px);
+    box-shadow: 0 15px 35px rgba(6, 59, 120, 0.18);
+}
+/* Ícones */
 .features-icons-icon i {
-  font-size: 3rem;
+  font-size: 30.5rem;
+  color: var(--azul-principal);
+  margin-bottom: 1rem;
 }
 
+/* Títulos dos cards */
+.features-icons-item h3,
+.features-icons-item h4 {
+  color: var(--azul-escuro);
+  font-weight: 700;
+}
+
+/* Texto dos cards */
+.features-icons-item p {
+  color: #5f6f82;
+  line-height: 1.6;
+}
+
+/* Botão principal */
+.btn-primary {
+  border: none;
+  border-radius: 12px;
+
+  padding: 0.85rem 1.8rem;
+
+  background: linear-gradient(
+    135deg,
+    #084b96,
+    #0f6fc6
+  );
+
+  font-weight: 600;
+
+  box-shadow: 0 5px 15px rgba(15, 111, 198, 0.25);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+/* Hover do botão */
+.btn-primary:hover {
+  background: linear-gradient(
+    135deg,
+    #063b78,
+    #084b96
+  );
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 8px 20px rgba(15, 111, 198, 0.35);
+}
+
+/* Seção de chamada */
 .call-to-action {
   background: linear-gradient(
     135deg,
     var(--azul-escuro),
     var(--azul-principal)
   );
+
+  padding: 6rem 0;
 }
 
-.btn-primary {
-  border: 0;
-  border-radius: 10px;
-  padding: 0.8rem 1.6rem;
-  background-color: #084b96;
+/* Imagens */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
 }
 
-.btn-primary:hover {
+/* Links */
+a {
+  transition: color 0.2s ease;
+}
+
+/* Rodapé */
+footer.footer {
+  padding: 4rem 0;
   background-color: #063b78;
+  color: white;
+}
+
+/* Ajustes para celular */
+@media (max-width: 768px) {
+
+  header.masthead {
+    min-height: 500px;
+    padding: 4rem 1rem;
+    text-align: center;
+  }
+
+  header.masthead h1 {
+    font-size: 2.4rem;
+  }
+
+  header.masthead .lead {
+    font-size: 1rem;
+  }
+
+  .features-icons-item {
+    margin-bottom: 1.5rem;
+  }
+
+  .call-to-action {
+    padding: 4rem 1rem;
+  }
+}
+
+/* Textos sobre fundo azul */
+header.masthead,
+header.masthead h1,
+header.masthead h2,
+header.masthead h3,
+header.masthead p,
+.call-to-action,
+.call-to-action h1,
+.call-to-action h2,
+.call-to-action h3,
+.call-to-action p {
+    color: #fff !important;
 }
