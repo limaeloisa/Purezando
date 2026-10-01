@@ -9,3 +9,8 @@ def inicio():
 @app.route("/cadastro")
 def cadastro():
     return render_template("cadastro.html")
+
+@app.route("/login")
+def login():
+    return render_template("login.html")
+

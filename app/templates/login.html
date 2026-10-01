@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='public/css/login.css') }}">
+</head>
+
+<body>
+
+    <div class="login-container">
+        <h1>Login</h1>
+        <p>Faça seu login para começar o Quiz</p>
+
+        <form>
+            <label for="nome">Nome</label>
+            <input type="text" id="nome" name="nome" placeholder="Digite seu nome" required>
+
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+
+            <button type="submit">Entrar</button>
+        </form>
+
+        <p class="cadastro-text">Ainda não possui uma conta?</p>
+
+        <a href="{{ url_for('cadastro') }}" class="botao-cadastro">Cadastrar</a>
+    </div>
+
+</body>
+</html>
