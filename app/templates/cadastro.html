@@ -13,7 +13,7 @@
         <h1>Cadastro</h1>
         <p>Cadastre-se para começar o quiz</p>
 
-        <form>
+        <form action="{{ url_for('cadastro') }}" method="POST">
             <label for="nome">Nome</label>
             <input type="text" id="nome" name="nome" placeholder="Digite seu nome" required>
 
