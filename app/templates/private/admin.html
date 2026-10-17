@@ -1,0 +1,178 @@
+{% extends "public/base.html" %}
+
+{% block title %}Painel administrativo | Conheça Pureza{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='private/css/admin.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-layout" id="admin-layout">
+  <aside class="admin-sidebar" id="admin-sidebar" aria-label="Navegação administrativa">
+    <a class="admin-brand" href="{{ url_for('admin') }}"><span class="admin-brand-mark">P</span><span>Pureza<small>ADMIN</small></span></a>
+    <p class="admin-nav-label">GERENCIAMENTO</p>
+    <nav class="admin-nav">
+      <a class="admin-nav-link active" href="#dashboard"><i class="bi bi-grid-1x2-fill" aria-hidden="true"></i>Dashboard</a>
+      <a class="admin-nav-link" href="#usuarios"><i class="bi bi-people-fill" aria-hidden="true"></i>Usuários</a>
+      <a class="admin-nav-link" href="#categorias"><i class="bi bi-collection-fill" aria-hidden="true"></i>Categorias</a>
+      <a class="admin-nav-link" href="#perguntas"><i class="bi bi-patch-question-fill" aria-hidden="true"></i>Perguntas</a>
+    </nav>
+    <div class="admin-sidebar-footer">
+      <span class="admin-avatar">{{ session.get('nome_usuario', 'A')[:1]|upper }}</span>
+      <span><strong>{{ session.get('nome_usuario') }}</strong><small>Administrador</small></span>
+    </div>
+  </aside>
+  <button class="admin-backdrop" id="admin-backdrop" type="button" aria-label="Fechar navegação" hidden></button>
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <button class="admin-menu-toggle" id="admin-sidebar-toggle" type="button" aria-label="Abrir navegação" aria-controls="admin-sidebar" aria-expanded="false"><i class="bi bi-list" aria-hidden="true"></i></button>
+      <div class="admin-breadcrumb"><span>Administração</span><i class="bi bi-chevron-right" aria-hidden="true"></i><strong>Dashboard</strong></div>
+      <form action="{{ url_for('logout') }}" method="post"><button class="admin-logout" type="submit"><i class="bi bi-box-arrow-right" aria-hidden="true"></i><span>Sair</span></button></form>
+    </header>
+
+    <main class="admin-content">
+      <header class="admin-page-heading" id="dashboard">
+    <div>
+      <p class="admin-kicker">VISÃO GERAL</p>
+      <h1>Painel administrativo</h1>
+      <p>Gerencie o conteúdo e os acessos do quiz.</p>
+    </div>
+    <span class="admin-date"><i class="bi bi-shield-check" aria-hidden="true"></i> Acesso seguro</span>
+      </header>
+
+      <div class="admin-stat-grid" aria-label="Resumo da aplicação">
+        <article class="admin-stat"><span class="admin-stat-icon stat-users"><i class="bi bi-people-fill" aria-hidden="true"></i></span><div><p>Usuários</p><strong>{{ usuarios|length }}</strong></div><span class="admin-stat-foot">Contas cadastradas</span></article>
+        <article class="admin-stat"><span class="admin-stat-icon stat-categories"><i class="bi bi-collection-fill" aria-hidden="true"></i></span><div><p>Categorias</p><strong>{{ categorias|length }}</strong></div><span class="admin-stat-foot">Temas disponíveis</span></article>
+        <article class="admin-stat"><span class="admin-stat-icon stat-questions"><i class="bi bi-patch-question-fill" aria-hidden="true"></i></span><div><p>Perguntas</p><strong>{{ perguntas|length }}</strong></div><span class="admin-stat-foot">No banco de questões</span></article>
+        <article class="admin-stat"><span class="admin-stat-icon stat-games"><i class="bi bi-trophy-fill" aria-hidden="true"></i></span><div><p>Partidas</p><strong>{{ total_partidas }}</strong></div><span class="admin-stat-foot">Resultados registrados</span></article>
+      </div>
+
+      {% if erro %}<p class="alert alert-warning" role="status">{{ erro }}</p>{% endif %}
+
+  <section class="admin-section" id="usuarios" aria-labelledby="usuarios-heading">
+    <h2 class="h3" id="usuarios-heading">Usuários <span class="text-secondary fs-6">{{ usuarios|length }}</span></h2>
+    <form class="row g-2 align-items-end my-3" action="{{ url_for('criar_usuario_admin') }}" method="post">
+      <div class="col-sm-6 col-lg-3"><label class="form-label" for="novo-nome">Nome</label><input class="form-control" id="novo-nome" name="nome" required maxlength="100"></div>
+      <div class="col-sm-6 col-lg-3"><label class="form-label" for="novo-usuario">Nome de usuário</label><input class="form-control" id="novo-usuario" name="nome_usuario" required maxlength="50"></div>
+      <div class="col-sm-6 col-lg-3"><label class="form-label" for="nova-senha">Senha inicial</label><input class="form-control" id="nova-senha" name="senha" type="password" minlength="8" required autocomplete="new-password"></div>
+      <div class="col-sm-4 col-lg-2"><label class="form-label" for="novo-tipo">Tipo</label><select class="form-select" id="novo-tipo" name="tipo_usuario"><option value="jogador">Jogador</option><option value="admin">Admin</option></select></div>
+      <div class="col-sm-2 col-lg-1"><button class="btn btn-primary w-100" type="submit" aria-label="Criar usuário">+</button></div>
+    </form>
+
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead><tr><th>Nome</th><th>Nome de usuário</th><th>Nova senha</th><th>Tipo</th><th>Ações</th></tr></thead>
+        <tbody>
+          {% for usuario in usuarios %}
+            <tr>
+              <td>
+                <form id="editar-usuario-{{ usuario.id }}" action="{{ url_for('editar_usuario_admin', usuario_id=usuario.id) }}" method="post"></form>
+                <input class="form-control form-control-sm" form="editar-usuario-{{ usuario.id }}" name="nome" value="{{ usuario.nome }}" required maxlength="100" aria-label="Nome">
+              </td>
+              <td><input class="form-control form-control-sm" form="editar-usuario-{{ usuario.id }}" name="nome_usuario" value="{{ usuario.nome_usuario }}" required maxlength="50" aria-label="Nome de usuário"></td>
+              <td><input class="form-control form-control-sm" form="editar-usuario-{{ usuario.id }}" name="senha" type="password" minlength="8" autocomplete="new-password" placeholder="Manter atual" aria-label="Nova senha opcional"></td>
+              <td>
+                {% if usuario.id == session.get('usuario_id') %}
+                  <input form="editar-usuario-{{ usuario.id }}" type="hidden" name="tipo_usuario" value="admin">Admin
+                {% else %}
+                  <select class="form-select form-select-sm" form="editar-usuario-{{ usuario.id }}" name="tipo_usuario" aria-label="Tipo de usuário">
+                    <option value="jogador" {% if usuario.tipo_usuario == 'jogador' %}selected{% endif %}>Jogador</option>
+                    <option value="admin" {% if usuario.tipo_usuario == 'admin' %}selected{% endif %}>Admin</option>
+                  </select>
+                {% endif %}
+              </td>
+              <td class="text-nowrap">
+                <button class="btn btn-sm btn-outline-primary" form="editar-usuario-{{ usuario.id }}" type="submit">Salvar</button>
+                {% if usuario.id != session.get('usuario_id') %}
+                  <form class="d-inline" action="{{ url_for('excluir_usuario_admin', usuario_id=usuario.id) }}" method="post" onsubmit="return confirm('Excluir este usuário e o histórico de partidas dele?')"><button class="btn btn-sm btn-outline-danger" type="submit">Excluir</button></form>
+                {% endif %}
+              </td>
+            </tr>
+          {% else %}
+            <tr><td colspan="5" class="text-secondary">Nenhum usuário cadastrado.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="admin-section" id="categorias" aria-labelledby="categorias-heading">
+    <h2 class="h3" id="categorias-heading">Categorias <span class="text-secondary fs-6">{{ categorias|length }}</span></h2>
+    <form class="row g-2 align-items-end my-3" action="{{ url_for('criar_categoria') }}" method="post">
+      <div class="col-md-4"><label class="form-label" for="categoria-nome">Nome</label><input class="form-control" id="categoria-nome" name="nome" required maxlength="80"></div>
+      <div class="col-md-6"><label class="form-label" for="categoria-descricao">Descrição</label><input class="form-control" id="categoria-descricao" name="descricao" required></div>
+      <div class="col-md-2"><button class="btn btn-primary w-100" type="submit">Adicionar</button></div>
+    </form>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead><tr><th>Nome</th><th>Descrição</th><th>Perguntas</th><th>Ações</th></tr></thead>
+        <tbody>
+          {% for categoria in categorias %}
+            <tr>
+              <td colspan="4">
+                <div class="row g-2 align-items-center">
+                  <form id="editar-categoria-{{ categoria.id }}" action="{{ url_for('editar_categoria', categoria_id=categoria.id) }}" method="post"></form>
+                  <div class="col-md-3"><input class="form-control form-control-sm" form="editar-categoria-{{ categoria.id }}" name="nome" value="{{ categoria.nome }}" required maxlength="80" aria-label="Nome da categoria"></div>
+                  <div class="col-md-5"><input class="form-control form-control-sm" form="editar-categoria-{{ categoria.id }}" name="descricao" value="{{ categoria.descricao }}" required aria-label="Descrição da categoria"></div>
+                  <div class="col-md-1 text-secondary">{{ categoria.perguntas|length }}</div>
+                  <div class="col-md-3 text-nowrap">
+                    <button class="btn btn-sm btn-outline-primary" form="editar-categoria-{{ categoria.id }}" type="submit">Salvar</button>
+                    <form class="d-inline" action="{{ url_for('excluir_categoria', categoria_id=categoria.id) }}" method="post" onsubmit="return confirm('Excluir esta categoria? Ela precisa estar sem perguntas.')"><button class="btn btn-sm btn-outline-danger" type="submit">Excluir</button></form>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          {% else %}
+            <tr><td colspan="4" class="text-secondary">Nenhuma categoria cadastrada.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="admin-section" id="perguntas" aria-labelledby="perguntas-heading">
+    <h2 class="h3" id="perguntas-heading">Perguntas <span class="text-secondary fs-6">{{ perguntas|length }}</span></h2>
+    {% if categorias %}
+      <form class="row g-3 my-3" action="{{ url_for('criar_pergunta') }}" method="post">
+        <div class="col-lg-8"><label class="form-label" for="nova-pergunta">Enunciado</label><textarea class="form-control" id="nova-pergunta" name="enunciado" rows="2" required></textarea></div>
+        <div class="col-lg-4"><label class="form-label" for="pergunta-categoria">Categoria</label><select class="form-select" id="pergunta-categoria" name="categoria_id" required>{% for categoria in categorias %}<option value="{{ categoria.id }}">{{ categoria.nome }}</option>{% endfor %}</select></div>
+        {% for letra in ['a', 'b', 'c', 'd'] %}
+          <div class="col-md-6"><label class="form-label" for="nova-opcao-{{ letra }}">Alternativa {{ letra|upper }}</label><input class="form-control" id="nova-opcao-{{ letra }}" name="opcao_{{ letra }}" required maxlength="255"></div>
+        {% endfor %}
+        <div class="col-md-4"><label class="form-label" for="resposta-correta">Resposta correta</label><select class="form-select" id="resposta-correta" name="resposta_correta"><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select></div>
+        <div class="col-md-4 align-self-end"><button class="btn btn-primary" type="submit">Adicionar pergunta</button></div>
+      </form>
+    {% else %}
+      <p class="text-secondary">Crie uma categoria antes de adicionar perguntas.</p>
+    {% endif %}
+
+    <div class="mt-4">
+      {% for pergunta in perguntas %}
+        <details class="border-bottom py-3">
+          <summary class="fw-semibold">{{ pergunta.enunciado }} <span class="text-secondary">· {{ pergunta.categoria.nome }}</span></summary>
+          <form class="row g-3 pt-3" action="{{ url_for('editar_pergunta', pergunta_id=pergunta.id) }}" method="post">
+            <div class="col-lg-8"><label class="form-label" for="enunciado-{{ pergunta.id }}">Enunciado</label><textarea class="form-control" id="enunciado-{{ pergunta.id }}" name="enunciado" rows="2" required>{{ pergunta.enunciado }}</textarea></div>
+            <div class="col-lg-4"><label class="form-label" for="categoria-{{ pergunta.id }}">Categoria</label><select class="form-select" id="categoria-{{ pergunta.id }}" name="categoria_id" required>{% for categoria in categorias %}<option value="{{ categoria.id }}" {% if categoria.id == pergunta.categoria_id %}selected{% endif %}>{{ categoria.nome }}</option>{% endfor %}</select></div>
+            {% for letra in ['a', 'b', 'c', 'd'] %}
+              <div class="col-md-6"><label class="form-label" for="opcao-{{ pergunta.id }}-{{ letra }}">Alternativa {{ letra|upper }}</label><input class="form-control" id="opcao-{{ pergunta.id }}-{{ letra }}" name="opcao_{{ letra }}" value="{{ pergunta.opcoes[loop.index0] }}" required maxlength="255"></div>
+            {% endfor %}
+            <div class="col-md-4"><label class="form-label" for="correta-{{ pergunta.id }}">Resposta correta</label><select class="form-select" id="correta-{{ pergunta.id }}" name="resposta_correta">{% for letra in ['A', 'B', 'C', 'D'] %}<option value="{{ letra }}" {% if pergunta.resposta_correta == letra %}selected{% endif %}>{{ letra }}</option>{% endfor %}</select></div>
+            <div class="col-md-4 align-self-end"><button class="btn btn-outline-primary" type="submit">Salvar pergunta</button></div>
+          </form>
+          <form class="mt-2" action="{{ url_for('excluir_pergunta', pergunta_id=pergunta.id) }}" method="post" onsubmit="return confirm('Excluir esta pergunta?')"><button class="btn btn-sm btn-outline-danger" type="submit">Excluir pergunta</button></form>
+        </details>
+      {% else %}
+        <p class="text-secondary">Nenhuma pergunta cadastrada.</p>
+      {% endfor %}
+    </div>
+  </section>
+    </main>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+  <script src="{{ url_for('static', filename='private/js/admin.js') }}" defer></script>
+{% endblock %}

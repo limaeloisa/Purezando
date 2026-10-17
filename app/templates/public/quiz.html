@@ -1,0 +1,81 @@
+{% extends "public/base.html" %}
+
+{% block title %}{{ nome_categoria }} | Quiz Pureza{% endblock %}
+
+{% block body_class %}quiz-shell{% endblock %}
+
+{% block css %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='public/css/quiz.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="quiz-page">
+  <section class="quiz-layout">
+    <header class="quiz-header">
+      <a class="quiz-back" href="{{ url_for('categorias') }}">Voltar às categorias</a>
+      <div class="quiz-brand">
+        <img src="{{ url_for('static', filename='public/assets/img/purezando.png') }}" alt="Purezando">
+        <span>Conheça Pureza</span>
+      </div>
+      <span class="quiz-category">{{ nome_categoria }}</span>
+    </header>
+
+    <div class="quiz-heading">
+      <p class="quiz-eyebrow">Desafio {{ nome_categoria }}</p>
+      <h1>O que você sabe sobre Pureza?</h1>
+      <p>Escolha uma resposta em cada pergunta e confira seu resultado no final.</p>
+    </div>
+
+    <div class="quiz-progress">
+      <div class="quiz-progress-meta">
+        <span id="quiz-step-label">Pergunta 1 de {{ perguntas|length }}</span>
+        <span>{{ perguntas|length }} questões</span>
+      </div>
+      <div class="quiz-progress-track" role="progressbar" aria-label="Progresso do quiz" aria-valuemin="0" aria-valuemax="{{ perguntas|length }}" aria-valuenow="1">
+        <div class="quiz-progress-value" id="quiz-progress-value"></div>
+      </div>
+    </div>
+
+    {% if erro %}
+      <p class="quiz-error" role="alert">{{ erro }}</p>
+    {% endif %}
+
+    <form action="{{ url_for('quiz') }}" method="post" class="quiz-form">
+      <input type="hidden" name="categoria" value="{{ categoria }}">
+
+      {% for pergunta in perguntas %}
+        {% set pergunta_index = loop.index0 %}
+        <fieldset class="question-block" data-correct="{{ pergunta.correta }}" data-correct-answer="{{ pergunta.resposta_correta }}" {% if not loop.first %}hidden{% endif %}>
+          <legend>
+            <span class="question-number">{{ "%02d"|format(loop.index) }}</span>
+            <span>{{ pergunta.texto }}</span>
+          </legend>
+          <div class="answers-grid">
+            {% for opcao in pergunta.opcoes %}
+              <label class="answer-option answer-{{ loop.index }}">
+                <input type="radio" name="resposta_{{ pergunta_index }}" value="{{ loop.index0 }}" aria-describedby="feedback-{{ pergunta_index }}" required>
+                <span class="answer-indicator answer-shape-{{ loop.index }}" aria-hidden="true"></span>
+                <span class="answer-text">{{ opcao }}</span>
+              </label>
+            {% endfor %}
+          </div>
+          <p class="answer-feedback" id="feedback-{{ pergunta_index }}" aria-live="polite" hidden></p>
+        </fieldset>
+      {% endfor %}
+
+      <div class="quiz-controls">
+        <button class="quiz-previous" id="quiz-previous" type="button" disabled>Anterior</button>
+        <button class="quiz-next" id="quiz-next" type="button" disabled>Confirmar resposta</button>
+        <button class="quiz-finish" id="quiz-finish" type="submit" hidden>Ver resultado <span aria-hidden="true">→</span></button>
+      </div>
+    </form>
+  </section>
+</div>
+{% endblock %}
+
+{% block js %}
+  <script src="{{ url_for('static', filename='public/js/quiz.js') }}" defer></script>
+{% endblock %}

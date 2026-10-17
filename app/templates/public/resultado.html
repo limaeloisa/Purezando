@@ -1,0 +1,23 @@
+{% extends "public/base.html" %}
+
+{% block title %}Seu resultado | Conheça Pureza{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+	<div class="mx-auto text-center" style="max-width: 640px">
+		<p class="text-uppercase fw-bold text-success">{{ resultado.categoria }}</p>
+		<h1 class="mb-3">Quiz concluído</h1>
+		<p class="display-4 fw-bold text-primary mb-1">{{ resultado.pontuacao }} / {{ resultado.total }}</p>
+		<p class="text-secondary">respostas corretas</p>
+
+		{% if not resultado.persistido %}
+			<p class="alert alert-warning" role="status">Sua pontuação foi exibida, mas não foi salva no ranking porque o banco está indisponível.</p>
+		{% endif %}
+
+		<div class="d-flex flex-wrap justify-content-center gap-2 mt-4">
+			<a class="btn btn-primary" href="{{ url_for('categorias') }}">Jogar novamente</a>
+			<a class="btn btn-outline-secondary" href="{{ url_for('ranking', categoria=resultado.categoria_id) }}">Ver ranking da categoria</a>
+		</div>
+	</div>
+</section>
+{% endblock %}

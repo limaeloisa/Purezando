@@ -1,0 +1,36 @@
+{% extends "public/base.html" %}
+
+{% block title %}Categorias | Conheça Pureza{% endblock %}
+
+{% block body_class %}category-shell{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+  <div class="mb-4">
+    <p class="text-uppercase fw-bold text-success mb-1">Quiz</p>
+    <h1>Escolha uma categoria</h1>
+  </div>
+
+  {% if categorias %}
+    <div class="row g-3">
+      {% for categoria in categorias %}
+        <div class="col-md-6 col-lg-4">
+          <article class="card h-100 p-3">
+            <h2 class="h4">{{ categoria.nome }}</h2>
+            <p class="text-secondary">{{ categoria.descricao }}</p>
+            <p class="small text-secondary mt-auto">{{ categoria.perguntas|length }} perguntas</p>
+            {% if categoria.perguntas %}
+              <a href="{{ url_for('quiz', categoria=categoria.id) }}" class="btn btn-primary">Começar</a>
+            {% else %}
+              <button class="btn btn-secondary" type="button" disabled>Sem perguntas</button>
+            {% endif %}
+            <a class="btn btn-outline-secondary mt-2" href="{{ url_for('ranking', categoria=categoria.id) }}">Ranking da categoria</a>
+          </article>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-secondary">Ainda não há categorias disponíveis.</p>
+  {% endif %}
+</section>
+{% endblock %}

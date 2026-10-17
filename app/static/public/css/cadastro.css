@@ -14,7 +14,7 @@ body {
 }
 
 .cadastro-container {
-    width: 400px;
+    width: min(400px, calc(100vw - 32px));
     background-color: white;
     padding: 35px;
     border-radius: 15px;
@@ -93,4 +93,10 @@ body {
 
 .botao-login:hover {
     background-color: #125589;
+}
+
+@media (max-width: 480px) {
+    .cadastro-container {
+        padding: 26px 22px;
+    }
 }

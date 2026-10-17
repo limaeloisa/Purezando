@@ -1,0 +1,37 @@
+{% extends "public/base.html" %}
+
+{% block title %}Meu histórico | Conheça Pureza{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+	<header class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+		<div>
+			<p class="text-uppercase fw-bold text-success mb-1">Suas partidas</p>
+			<h1 class="mb-0">Histórico</h1>
+		</div>
+		<a class="btn btn-primary" href="{{ url_for('categorias') }}">Jogar novamente</a>
+	</header>
+
+	{% if erro %}
+		<p class="alert alert-warning" role="status">{{ erro }}</p>
+	{% elif partidas %}
+		<div class="table-responsive">
+			<table class="table table-hover align-middle">
+				<thead><tr><th scope="col">Data</th><th scope="col">Categoria</th><th scope="col">Acertos</th><th scope="col">Aproveitamento</th></tr></thead>
+				<tbody>
+					{% for partida in partidas %}
+						<tr>
+							<td>{{ partida.criado_em.strftime('%d/%m/%Y %H:%M') }}</td>
+							<td>{{ partida.categoria }}</td>
+							<td>{{ partida.pontuacao }} / {{ partida.total_perguntas }}</td>
+							<td>{{ ((partida.pontuacao / partida.total_perguntas) * 100)|round|int }}%</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	{% else %}
+		<p class="text-secondary">Você ainda não concluiu nenhuma partida.</p>
+	{% endif %}
+</section>
+{% endblock %}

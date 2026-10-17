@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,17 +11,21 @@
 
     <div class="cadastro-container">
         <h1>Cadastro</h1>
-        <p>Cadastre-se para começar o quiz</p>
+        <p>Crie uma conta de jogador para começar o quiz.</p>
+
+        {% if erro %}
+            <p class="form-error" role="alert">{{ erro }}</p>
+        {% endif %}
 
         <form action="{{ url_for('cadastro') }}" method="POST">
             <label for="nome">Nome</label>
-            <input type="text" id="nome" name="nome" placeholder="Digite seu nome" required>
+            <input type="text" id="nome" name="nome" placeholder="Digite seu nome" autocomplete="name" required>
 
-            <label for="email">E-mail</label>
-            <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+            <label for="nome_usuario">Nome de usuário</label>
+            <input type="text" id="nome_usuario" name="nome_usuario" placeholder="Escolha um usuário" autocomplete="username" required>
 
             <label for="senha">Senha</label>
-            <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+            <input type="password" id="senha" name="senha" placeholder="Use pelo menos 8 caracteres" minlength="8" autocomplete="new-password" required>
 
             <button type="submit">Cadastrar</button>
         </form>
