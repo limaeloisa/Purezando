@@ -2,60 +2,107 @@
 
 {% block title %}Ranking | Conheça Pureza{% endblock %}
 
+{% block css %}
+	<link rel="stylesheet" href="{{ url_for('static', filename='public/css/records.css') }}">
+{% endblock %}
+
+{% block body_class %}ranking-shell{% endblock %}
+
 {% block content %}
-<section class="container py-5">
-	<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
-		<div>
-			<p class="text-uppercase fw-bold text-success mb-1">Placar{% if categoria_selecionada %} · {{ categoria_selecionada.nome }}{% else %} geral{% endif %}</p>
-			<h1 class="mb-0">Ranking</h1>
-		</div>
-		<a class="btn btn-primary" href="{{ url_for('categorias') }}">Jogar</a>
-	</div>
+<section class="records-page">
+	<div class="container records-container">
+		<header class="records-heading">
+			<div>
+				<p class="records-kicker">PLACAR{% if categoria_selecionada %} · {{ categoria_selecionada.nome }}{% else %} GERAL{% endif %}</p>
+				<h1>Ranking</h1>
+				<p>Confira os destaques e compare o desempenho das partidas.</p>
+			</div>
+			<a class="btn btn-primary records-primary-action" href="{{ url_for('categorias') }}">Jogar agora</a>
+		</header>
 
-	<form class="row g-2 align-items-end mb-4" method="get" action="{{ url_for('ranking') }}">
-		<div class="col-sm-8 col-md-5">
-			<label class="form-label" for="filtro-categoria">Filtrar por categoria</label>
-			<select class="form-select" id="filtro-categoria" name="categoria">
-				<option value="">Todas as categorias</option>
-				{% for categoria in categorias %}
-					<option value="{{ categoria.id }}" {% if categoria_selecionada and categoria.id == categoria_selecionada.id %}selected{% endif %}>{{ categoria.nome }}</option>
-				{% endfor %}
-			</select>
-		</div>
-		<div class="col-auto"><button class="btn btn-outline-primary" type="submit">Ver ranking</button></div>
-	</form>
-
-	{% if resultado_recente %}
-		<div class="alert alert-success d-flex flex-wrap justify-content-between align-items-center gap-2" role="status">
-			<span>Você fez <strong>{{ resultado_recente.pontuacao }} de {{ resultado_recente.total }}</strong> em {{ resultado_recente.categoria }}.</span>
-			<a class="alert-link" href="{{ url_for('resultado') }}">Ver resultado da partida</a>
-		</div>
-	{% endif %}
-
-	{% if erro %}
-		<p class="alert alert-warning" role="status">{{ erro }}</p>
-	{% elif resultados %}
-		<div class="table-responsive">
-			<table class="table table-hover align-middle">
-				<thead>
-					<tr><th scope="col">#</th><th scope="col">Jogador</th><th scope="col">Categoria</th><th scope="col">Acertos</th><th scope="col">Erros</th><th scope="col">Aproveitamento</th></tr>
-				</thead>
-				<tbody>
-					{% for resultado in resultados %}
-						<tr>
-							<th scope="row">{{ loop.index }}</th>
-							<td>{{ resultado.usuario.nome_usuario }}</td>
-							<td>{{ resultado.categoria|capitalize }}</td>
-							<td>{{ resultado.pontuacao }} / {{ resultado.total_perguntas }}</td>
-							<td>{{ resultado.total_perguntas - resultado.pontuacao }}</td>
-							<td>{{ ((resultado.pontuacao / resultado.total_perguntas) * 100)|round|int }}%</td>
-						</tr>
+		<form class="records-filter" method="get" action="{{ url_for('ranking') }}">
+			<div class="records-filter-field">
+				<label class="form-label" for="filtro-categoria">Filtrar por categoria</label>
+				<select class="form-select" id="filtro-categoria" name="categoria">
+					<option value="">Todas as categorias</option>
+					{% for categoria in categorias %}
+						<option value="{{ categoria.id }}" {% if categoria_selecionada and categoria.id == categoria_selecionada.id %}selected{% endif %}>{{ categoria.nome }}</option>
 					{% endfor %}
-				</tbody>
-			</table>
-		</div>
-	{% else %}
-		<p class="text-secondary">Ainda não há partidas nesta categoria. Seja o primeiro a jogar.</p>
-	{% endif %}
+				</select>
+			</div>
+			<button class="btn btn-outline-primary" type="submit">Ver ranking</button>
+		</form>
+
+		{% if resultado_recente %}
+			<div class="alert alert-success records-notice" role="status">
+				<span>Você fez <strong>{{ resultado_recente.pontuacao }} de {{ resultado_recente.total }}</strong> em {{ resultado_recente.categoria }}.</span>
+				<a class="alert-link" href="{{ url_for('resultado') }}">Ver resultado da partida</a>
+			</div>
+		{% endif %}
+
+		{% if erro %}
+			<p class="alert alert-warning" role="status">{{ erro }}</p>
+		{% elif resultados %}
+			<section class="records-card ranking-chart-card" aria-labelledby="ranking-chart-heading">
+				<div class="records-card-heading">
+					<div>
+						<p class="records-kicker">DESEMPENHO</p>
+						<h2 id="ranking-chart-heading">Aproveitamento dos destaques</h2>
+					</div>
+					<span class="records-count">Top {{ resultados|length }}</span>
+				</div>
+				<ol class="ranking-bars">
+					{% for resultado in resultados %}
+						{% set percentual = ((resultado.pontuacao / resultado.total_perguntas) * 100)|round|int if resultado.total_perguntas > 0 else 0 %}
+						<li class="ranking-bar-item">
+							<div class="ranking-bar-label">
+								<span><span class="ranking-position">{{ loop.index }}</span>{{ resultado.usuario.nome_usuario }}</span>
+								<strong>{{ percentual }}%</strong>
+							</div>
+							<div class="ranking-bar-track" role="progressbar" aria-label="Aproveitamento de {{ resultado.usuario.nome_usuario }}" aria-valuenow="{{ percentual }}" aria-valuemin="0" aria-valuemax="100">
+								<span class="ranking-bar-fill" style="width: {{ percentual }}%"></span>
+							</div>
+						</li>
+					{% endfor %}
+				</ol>
+			</section>
+
+			<section class="records-card ranking-table-card" aria-labelledby="ranking-table-heading">
+				<div class="records-card-heading">
+					<div>
+						<p class="records-kicker">CLASSIFICAÇÃO</p>
+						<h2 id="ranking-table-heading">Melhores partidas</h2>
+					</div>
+				</div>
+				<div class="table-responsive">
+					<table class="table records-table align-middle">
+						<thead>
+							<tr><th scope="col">Posição</th><th scope="col">Jogador</th><th scope="col">Categoria</th><th scope="col">Acertos</th><th scope="col">Erros</th><th scope="col">Aproveitamento</th></tr>
+						</thead>
+						<tbody>
+							{% for resultado in resultados %}
+								{% set percentual = ((resultado.pontuacao / resultado.total_perguntas) * 100)|round|int if resultado.total_perguntas > 0 else 0 %}
+								<tr>
+									<th scope="row"><span class="ranking-table-position">{{ loop.index }}</span></th>
+									<td class="records-player">{{ resultado.usuario.nome_usuario }}</td>
+									<td>{{ resultado.categoria|capitalize }}</td>
+									<td>{{ resultado.pontuacao }} / {{ resultado.total_perguntas }}</td>
+									<td>{{ resultado.total_perguntas - resultado.pontuacao }}</td>
+									<td><span class="records-percentage">{{ percentual }}%</span></td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</section>
+		{% else %}
+			<div class="records-empty">
+				<span class="records-empty-mark" aria-hidden="true">★</span>
+				<h2>Ainda não há partidas</h2>
+				<p>Seja o primeiro a jogar nesta categoria e aparecer no ranking.</p>
+				<a class="btn btn-primary" href="{{ url_for('categorias') }}">Escolher uma categoria</a>
+			</div>
+		{% endif %}
+	</div>
 </section>
 {% endblock %}

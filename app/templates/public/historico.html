@@ -2,36 +2,60 @@
 
 {% block title %}Meu histórico | Conheça Pureza{% endblock %}
 
-{% block content %}
-<section class="container py-5">
-	<header class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
-		<div>
-			<p class="text-uppercase fw-bold text-success mb-1">Suas partidas</p>
-			<h1 class="mb-0">Histórico</h1>
-		</div>
-		<a class="btn btn-primary" href="{{ url_for('categorias') }}">Jogar novamente</a>
-	</header>
+{% block css %}
+	<link rel="stylesheet" href="{{ url_for('static', filename='public/css/records.css') }}">
+{% endblock %}
 
-	{% if erro %}
-		<p class="alert alert-warning" role="status">{{ erro }}</p>
-	{% elif partidas %}
-		<div class="table-responsive">
-			<table class="table table-hover align-middle">
-				<thead><tr><th scope="col">Data</th><th scope="col">Categoria</th><th scope="col">Acertos</th><th scope="col">Aproveitamento</th></tr></thead>
-				<tbody>
-					{% for partida in partidas %}
-						<tr>
-							<td>{{ partida.criado_em.strftime('%d/%m/%Y %H:%M') }}</td>
-							<td>{{ partida.categoria }}</td>
-							<td>{{ partida.pontuacao }} / {{ partida.total_perguntas }}</td>
-							<td>{{ ((partida.pontuacao / partida.total_perguntas) * 100)|round|int }}%</td>
-						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
-	{% else %}
-		<p class="text-secondary">Você ainda não concluiu nenhuma partida.</p>
-	{% endif %}
+{% block body_class %}history-shell{% endblock %}
+
+{% block content %}
+<section class="records-page">
+	<div class="container records-container">
+		<header class="records-heading">
+			<div>
+				<p class="records-kicker">SUAS PARTIDAS</p>
+				<h1>Histórico</h1>
+				<p>Acompanhe seus resultados e sua evolução no quiz.</p>
+			</div>
+			<a class="btn btn-primary records-primary-action" href="{{ url_for('categorias') }}">Jogar novamente</a>
+		</header>
+
+		{% if erro %}
+			<p class="alert alert-warning" role="status">{{ erro }}</p>
+		{% elif partidas %}
+			<section class="records-card" aria-labelledby="history-table-heading">
+				<div class="records-card-heading">
+					<div>
+						<p class="records-kicker">SEU DESEMPENHO</p>
+						<h2 id="history-table-heading">Partidas recentes</h2>
+					</div>
+					<span class="records-count">{{ partidas|length }} exibidas</span>
+				</div>
+				<div class="table-responsive">
+					<table class="table records-table history-table align-middle">
+						<thead><tr><th scope="col">Data</th><th scope="col">Categoria</th><th scope="col">Acertos</th><th scope="col">Aproveitamento</th></tr></thead>
+						<tbody>
+							{% for partida in partidas %}
+								{% set percentual = ((partida.pontuacao / partida.total_perguntas) * 100)|round|int if partida.total_perguntas > 0 else 0 %}
+								<tr>
+									<td>{{ partida.criado_em.strftime('%d/%m/%Y %H:%M') }}</td>
+									<td class="records-player">{{ partida.categoria }}</td>
+									<td>{{ partida.pontuacao }} / {{ partida.total_perguntas }}</td>
+									<td><span class="records-percentage">{{ percentual }}%</span></td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</section>
+		{% else %}
+			<div class="records-empty">
+				<span class="records-empty-mark" aria-hidden="true">↗</span>
+				<h2>Nenhuma partida por aqui</h2>
+				<p>Quando concluir um quiz, seus resultados aparecerão nesta página.</p>
+				<a class="btn btn-primary" href="{{ url_for('categorias') }}">Começar a jogar</a>
+			</div>
+		{% endif %}
+	</div>
 </section>
 {% endblock %}

@@ -290,6 +290,13 @@ def admin():
         categorias_disponiveis = Categoria.query.order_by(Categoria.nome.asc()).all()
         perguntas_disponiveis = Pergunta.query.order_by(Pergunta.id.desc()).all()
         total_partidas = ResultadoQuiz.query.count()
+        dialeto_banco = db.engine.dialect.name
+        nome_banco = db.engine.url.database
+        tipo_banco = {
+            "mysql": "MySQL",
+            "sqlite": "SQLite"
+        }.get(dialeto_banco, dialeto_banco.upper())
+        banco_ativo = f"{tipo_banco} · {nome_banco if dialeto_banco == 'mysql' else 'local'}"
         erro = None
     except SQLAlchemyError:
         app.logger.exception("Erro ao carregar usuários para o painel admin")
@@ -297,6 +304,7 @@ def admin():
         categorias_disponiveis = []
         perguntas_disponiveis = []
         total_partidas = 0
+        banco_ativo = None
         erro = "Não foi possível carregar os usuários. Verifique a conexão com o banco."
     return render_template(
         "private/admin.html",
@@ -304,6 +312,7 @@ def admin():
         categorias=categorias_disponiveis,
         perguntas=perguntas_disponiveis,
         total_partidas=total_partidas,
+        banco_ativo=banco_ativo,
         erro=erro
     )
 
@@ -634,7 +643,11 @@ def ranking():
 
     try:
         categorias = Categoria.query.order_by(Categoria.nome.asc()).all()
-        consulta = ResultadoQuiz.query.join(Usuario)
+        consulta = (
+            ResultadoQuiz.query
+            .join(Usuario)
+            .filter(ResultadoQuiz.total_perguntas > 0)
+        )
         if categoria_id is not None:
             categoria_selecionada = db.session.get(Categoria, categoria_id)
             if categoria_selecionada is None:

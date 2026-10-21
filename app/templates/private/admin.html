@@ -28,7 +28,7 @@
   <div class="admin-main">
     <header class="admin-topbar">
       <button class="admin-menu-toggle" id="admin-sidebar-toggle" type="button" aria-label="Abrir navegação" aria-controls="admin-sidebar" aria-expanded="false"><i class="bi bi-list" aria-hidden="true"></i></button>
-      <div class="admin-breadcrumb"><span>Administração</span><i class="bi bi-chevron-right" aria-hidden="true"></i><strong>Dashboard</strong></div>
+      <div class="admin-breadcrumb"><span>Administração</span><i class="bi bi-chevron-right" aria-hidden="true"></i><strong id="admin-current-section">Dashboard</strong></div>
       <form action="{{ url_for('logout') }}" method="post"><button class="admin-logout" type="submit"><i class="bi bi-box-arrow-right" aria-hidden="true"></i><span>Sair</span></button></form>
     </header>
 
@@ -39,7 +39,10 @@
       <h1>Painel administrativo</h1>
       <p>Gerencie o conteúdo e os acessos do quiz.</p>
     </div>
-    <span class="admin-date"><i class="bi bi-shield-check" aria-hidden="true"></i> Acesso seguro</span>
+    <div class="admin-heading-status">
+      {% if banco_ativo %}<span class="admin-date"><i class="bi bi-database-check" aria-hidden="true"></i> Banco ativo · {{ banco_ativo }}</span>{% endif %}
+      <span class="admin-date"><i class="bi bi-shield-check" aria-hidden="true"></i> Acesso seguro</span>
+    </div>
       </header>
 
       <div class="admin-stat-grid" aria-label="Resumo da aplicação">

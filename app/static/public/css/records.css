@@ -1,0 +1,302 @@
+.ranking-shell,
+.history-shell {
+  min-height: 100vh;
+  color: #21435b;
+  background: #f1f7ff;
+}
+
+.records-page {
+  padding: clamp(2rem, 5vw, 4.5rem) 0;
+}
+
+.records-container {
+  max-width: 1080px;
+}
+
+.records-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin: 0 auto 1.75rem;
+}
+
+.records-heading h1 {
+  margin-bottom: 0.45rem;
+  color: #0d3f70;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 800;
+}
+
+.records-heading > div > p:last-child {
+  margin: 0;
+  color: #58758d;
+}
+
+.records-kicker {
+  margin: 0 0 0.45rem;
+  color: #1769aa;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+}
+
+.records-primary-action,
+.records-empty .btn {
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 10px;
+  color: #fff;
+  background: linear-gradient(125deg, #1769aa, #2d87c5);
+  box-shadow: 0 4px 0 #125589;
+  font-weight: 700;
+}
+
+.records-filter,
+.records-card,
+.records-empty {
+  border: 1px solid #c9e0f4;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(18, 85, 137, 0.09);
+}
+
+.records-filter {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.8rem;
+  margin-bottom: 1.25rem;
+  padding: 1.25rem;
+}
+
+.records-filter-field {
+  width: min(100%, 390px);
+}
+
+.records-filter .form-label {
+  color: #21435b;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.records-filter .form-select {
+  min-height: 44px;
+  border-color: #c9dbea;
+}
+
+.records-filter .btn {
+  min-height: 44px;
+  border-radius: 9px;
+  font-weight: 700;
+}
+
+.records-notice {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  margin-bottom: 1.25rem;
+  border-radius: 12px;
+}
+
+.records-card {
+  margin-top: 1.25rem;
+  padding: clamp(1.1rem, 3vw, 1.75rem);
+}
+
+.records-card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.records-card-heading h2,
+.records-empty h2 {
+  margin: 0;
+  color: #0d3f70;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.records-count {
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+  color: #125589;
+  background: #e6f2ff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ranking-bars {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ranking-bar-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.4rem;
+  color: #284b63;
+  font-size: 0.9rem;
+}
+
+.ranking-bar-label > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ranking-bar-label strong {
+  color: #125589;
+  font-variant-numeric: tabular-nums;
+}
+
+.ranking-position,
+.ranking-table-position {
+  display: inline-grid;
+  width: 1.65rem;
+  height: 1.65rem;
+  margin-right: 0.55rem;
+  place-items: center;
+  border-radius: 50%;
+  color: #125589;
+  background: #e6f2ff;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.ranking-bar-track {
+  height: 0.65rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e8f0f7;
+}
+
+.ranking-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #1769aa, #58a6d9);
+}
+
+.ranking-table-card .records-card-heading {
+  margin-bottom: 0.5rem;
+}
+
+.records-table {
+  min-width: 680px;
+  margin: 0;
+  color: #36576d;
+  font-size: 0.9rem;
+}
+
+.records-table thead th {
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+  color: #58758d;
+  font-size: 0.76rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.records-table tbody td,
+.records-table tbody th {
+  padding-top: 0.85rem;
+  padding-bottom: 0.85rem;
+}
+
+.records-player {
+  color: #0d3f70 !important;
+  font-weight: 700;
+}
+
+.records-percentage {
+  display: inline-block;
+  min-width: 3.4rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 999px;
+  color: #1769aa;
+  background: #e6f2ff;
+  font-weight: 800;
+  text-align: center;
+}
+
+.records-empty {
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  padding: 3rem 1.25rem;
+  text-align: center;
+}
+
+.records-empty-mark {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  border-radius: 50%;
+  color: #1769aa;
+  background: #e6f2ff;
+  font-size: 1.4rem;
+}
+
+.records-empty p {
+  margin: 0 0 0.4rem;
+  color: #58758d;
+}
+
+.history-table {
+  min-width: 560px;
+}
+
+@media (max-width: 576px) {
+  .records-page {
+    padding: 1.75rem 0 2.5rem;
+  }
+
+  .records-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .records-primary-action {
+    align-self: stretch;
+  }
+
+  .records-filter {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .records-filter-field {
+    width: 100%;
+  }
+
+  .records-notice {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .records-card-heading h2 {
+    font-size: 1.1rem;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ranking-bar-fill {
+    animation: ranking-fill-in 600ms ease-out both;
+  }
+
+  @keyframes ranking-fill-in {
+    from { width: 0; }
+  }
+}

@@ -24,7 +24,9 @@ arquivos estáticos.
 ## Executar localmente
 
 1. Instale as dependências: `pip install -r requirements.txt`.
-2. Para usar SQLite local, adicione ao `config.env`:
+2. Sem configuração de MySQL, a aplicação usa o SQLite local em
+   `instance/purezando.sqlite3`. Para escolher outro caminho ou definir uma chave
+   de sessão persistente, adicione ao `config.env`:
 
 	```env
 	DB_DRIVER=sqlite
@@ -43,7 +45,9 @@ Cada pergunta tem enunciado, categoria, quatro alternativas e a alternativa
 correta, necessários para o quiz calcular e salvar a pontuação.
 
 Para MySQL, configure `DB_DRIVER=mysql` e as variáveis `DB_USER`, `DB_PASSWORD`,
-`DB_HOST`, `DB_PORT` e `DB_NAME` no `config.env`. O banco indicado por `DB_NAME`
+`DB_HOST`, `DB_PORT` e `DB_NAME` no `config.env`. Quando essas configurações
+MySQL estiverem presentes, o aplicativo também seleciona MySQL automaticamente
+se `DB_DRIVER` não for definido. O banco indicado por `DB_NAME`
 precisa existir antes de executar `init-db`; o comando cria as tabelas da aplicação.
 Se o servidor exigir um certificado CA, informe seu caminho em `DB_SSL_CA`.
 

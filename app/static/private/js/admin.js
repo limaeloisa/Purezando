@@ -11,15 +11,44 @@
     backdrop.hidden = !open;
   }
 
+  const navigationLinks = [...sidebar.querySelectorAll(".admin-nav-link")];
+  const currentSection = document.querySelector("#admin-current-section");
+
+  function updateCurrentSection() {
+    const sectionId = window.location.hash.slice(1) || "dashboard";
+    const activeLink = navigationLinks.find((link) => link.hash === `#${sectionId}`)
+      || navigationLinks[0];
+
+    navigationLinks.forEach((link) => {
+      const active = link === activeLink;
+      link.classList.toggle("active", active);
+      if (active) {
+        link.setAttribute("aria-current", "location");
+      } else {
+        link.removeAttribute("aria-current");
+      }
+    });
+
+    if (currentSection && activeLink) {
+      currentSection.textContent = activeLink.textContent.trim();
+    }
+  }
+
   toggle.addEventListener("click", () => {
     setOpen(!layout.classList.contains("sidebar-open"));
   });
 
-  sidebar.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => setOpen(false));
+  navigationLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      updateCurrentSection();
+      setOpen(false);
+    });
   });
 
   backdrop.addEventListener("click", () => setOpen(false));
+
+  window.addEventListener("hashchange", updateCurrentSection);
+  updateCurrentSection();
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") setOpen(false);

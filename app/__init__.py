@@ -18,7 +18,11 @@ app = Flask(
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY") or os.urandom(32)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-database_driver = os.getenv("DB_DRIVER", "mysql").lower()
+mysql_settings = ("DB_USER", "DB_PASSWORD", "DB_HOST", "DB_PORT", "DB_NAME")
+default_database_driver = (
+	"mysql" if any(os.getenv(setting) for setting in mysql_settings) else "sqlite"
+)
+database_driver = (os.getenv("DB_DRIVER") or default_database_driver).lower()
 if database_driver == "sqlite":
 	database_path = os.getenv(
 		"DB_PATH",
