@@ -104,8 +104,8 @@
   <section class="admin-section" id="categorias" aria-labelledby="categorias-heading">
     <h2 class="h3" id="categorias-heading">Categorias <span class="text-secondary fs-6">{{ categorias|length }}</span></h2>
     <form class="row g-2 align-items-end my-3" action="{{ url_for('criar_categoria') }}" method="post">
-      <div class="col-md-4"><label class="form-label" for="categoria-nome">Nome</label><input class="form-control" id="categoria-nome" name="nome" required maxlength="80"></div>
-      <div class="col-md-6"><label class="form-label" for="categoria-descricao">Descrição</label><input class="form-control" id="categoria-descricao" name="descricao" required></div>
+      <div class="col-md-4"><label class="form-label" for="categoria-nome">Nome</label><input class="form-control" id="categoria-nome" name="nome" required maxlength="90"></div>
+      <div class="col-md-6"><label class="form-label" for="categoria-descricao">Descrição</label><input class="form-control" id="categoria-descricao" name="descricao" required maxlength="255"></div>
       <div class="col-md-2"><button class="btn btn-primary w-100" type="submit">Adicionar</button></div>
     </form>
     <div class="table-responsive">
@@ -117,8 +117,8 @@
               <td colspan="4">
                 <div class="row g-2 align-items-center">
                   <form id="editar-categoria-{{ categoria.id }}" action="{{ url_for('editar_categoria', categoria_id=categoria.id) }}" method="post"></form>
-                  <div class="col-md-3"><input class="form-control form-control-sm" form="editar-categoria-{{ categoria.id }}" name="nome" value="{{ categoria.nome }}" required maxlength="80" aria-label="Nome da categoria"></div>
-                  <div class="col-md-5"><input class="form-control form-control-sm" form="editar-categoria-{{ categoria.id }}" name="descricao" value="{{ categoria.descricao }}" required aria-label="Descrição da categoria"></div>
+                  <div class="col-md-3"><input class="form-control form-control-sm" form="editar-categoria-{{ categoria.id }}" name="nome" value="{{ categoria.nome }}" required maxlength="90" aria-label="Nome da categoria"></div>
+                  <div class="col-md-5"><input class="form-control form-control-sm" form="editar-categoria-{{ categoria.id }}" name="descricao" value="{{ categoria.descricao }}" required maxlength="255" aria-label="Descrição da categoria"></div>
                   <div class="col-md-1 text-secondary">{{ categoria.perguntas|length }}</div>
                   <div class="col-md-3 text-nowrap">
                     <button class="btn btn-sm btn-outline-primary" form="editar-categoria-{{ categoria.id }}" type="submit">Salvar</button>

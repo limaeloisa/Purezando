@@ -7,7 +7,7 @@ class ResultadoQuiz(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     usuario_id = db.Column(
         db.Integer,
-        db.ForeignKey("usuario.id", ondelete="CASCADE"),
+        db.ForeignKey("usuario.id_usuario", ondelete="CASCADE"),
         nullable=False
     )
     categoria = db.Column(db.String(40), nullable=False)

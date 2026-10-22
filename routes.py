@@ -64,8 +64,35 @@ def autenticar(perfil):
             erro = "Não foi possível acessar o banco de dados."
 
         if erro is None:
-            tipo_usuario = usuario.tipo_usuario.lower() if usuario else ""
-            if not usuario or not check_password_hash(usuario.senha, senha):
+            tipo_usuario = (
+                (usuario.tipo_usuario or "").strip().lower()
+                if usuario else ""
+            )
+            senha_valida = False
+            if usuario is not None and usuario.senha:
+                try:
+                    senha_valida = check_password_hash(usuario.senha, senha)
+                except (TypeError, ValueError):
+                    app.logger.warning(
+                        "Hash de senha inválido durante autenticação (%s)",
+                        perfil
+                    )
+
+            if (
+                usuario is None
+                or not senha_valida
+                or tipo_usuario != perfil
+            ):
+                app.logger.warning(
+                    "Autenticacao %s rejeitada: usuario_encontrado=%s, "
+                    "tipo_usuario=%s, senha_valida=%s",
+                    perfil,
+                    usuario is not None,
+                    tipo_usuario or "(vazio)",
+                    senha_valida
+                )
+
+            if not usuario or not senha_valida:
                 erro = "Usuário ou senha inválidos."
             elif tipo_usuario != perfil:
                 erro = "Esta conta não tem acesso a esta área."

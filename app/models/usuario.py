@@ -6,6 +6,7 @@ class Usuario(db.Model):
     __tablename__ = "usuario"
 
     id = db.Column(
+        "id_usuario",
         db.Integer,
         primary_key=True,
         autoincrement=True
@@ -31,4 +32,10 @@ class Usuario(db.Model):
         db.String(20),
         nullable=False,
         default="jogador"
+    )
+
+    data_cadastro = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=db.func.now()
     )
