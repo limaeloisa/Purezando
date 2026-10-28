@@ -123,6 +123,10 @@ body {
     width: 100%;
 }
 
+.login-container form + .botao-cadastro {
+    margin-top: 16px;
+}
+
 .admin-link {
     display: block;
     margin-top: 20px;

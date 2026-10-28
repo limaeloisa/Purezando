@@ -1,4 +1,10 @@
+from datetime import datetime, timezone
+
 from app import db
+
+
+def _utc_now():
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class ResultadoQuiz(db.Model):
@@ -20,6 +26,6 @@ class ResultadoQuiz(db.Model):
     )
     acertos = db.Column(db.Integer, nullable=False, default=0, server_default="0")
     total_perguntas = db.Column(db.Integer, nullable=False)
-    criado_em = db.Column(db.DateTime, nullable=False, default=db.func.now())
+    criado_em = db.Column(db.DateTime, nullable=False, default=_utc_now)
 
     usuario = db.relationship("Usuario", backref="resultados_quiz")

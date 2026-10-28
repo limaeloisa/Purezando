@@ -20,6 +20,7 @@
     href="{{ url_for('static', filename='public/css/home-carousel.css') }}"
     rel="stylesheet"
   >
+  <link rel="stylesheet" href="{{ url_for('static', filename='public/css/brand.css') }}">
 </head>
 
 <body class="home-carousel">
@@ -296,9 +297,14 @@
     </div>
   </main>
 
-  <footer class="container home-footer">
-    <p class="float-end"><a href="#">Voltar ao topo</a></p>
-    <p>&copy; 2026 Purezando Quizz — Quiz Educativo sobre Pureza/RN. &middot; <a href="{{ url_for('sobre') }}">Sobre o projeto</a></p>
+  <footer class="app-footer home-footer">
+    <div class="container app-footer-content">
+      <div>
+        <a class="app-footer-brand" href="{{ url_for('inicio') }}">Purezando Quizz</a>
+        <p class="app-footer-description">&copy; 2026 · Quiz educativo sobre Pureza/RN</p>
+      </div>
+      <a class="app-footer-link" href="{{ url_for('sobre') }}">Sobre o projeto <span aria-hidden="true">→</span></a>
+    </div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>

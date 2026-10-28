@@ -80,6 +80,16 @@ Entre em `/admin/login`. A partir do painel, administradores podem alterar o per
 das outras contas, editar nomes de usuário e redefinir senhas. Jogadores e
 administradores têm rotas e navegação separadas.
 
+Se não conseguir entrar, redefina a senha no ambiente conectado ao banco correto.
+O comando solicita a nova senha sem exibi-la e grava somente o hash:
+
+```powershell
+python -m flask --app app redefinir-senha-admin seu_usuario
+```
+
+Use esse comando somente depois de confirmar que `config.env` aponta para o banco
+que deseja atualizar. A conta precisa já ter o perfil de administrador.
+
 ## Usuários de teste
 
 - Administrador: usuário `admin`, provisionado no banco Aiven. A senha inicial é

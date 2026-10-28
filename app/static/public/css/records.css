@@ -11,6 +11,7 @@
 
 .records-container {
   max-width: 1080px;
+  margin-inline: auto;
 }
 
 .records-heading {
@@ -255,6 +256,16 @@
 
 .history-table {
   min-width: 560px;
+}
+
+.history-table th:not(:nth-child(2)),
+.history-table td:not(:nth-child(2)) {
+  text-align: center;
+}
+
+.history-table .records-date {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 @media (max-width: 576px) {

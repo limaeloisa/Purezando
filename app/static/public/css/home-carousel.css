@@ -12,9 +12,16 @@ html {
 }
 
 body.home-carousel {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
   color: var(--home-ink);
   background: #f8faff;
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.home-carousel > main {
+  flex: 1 0 auto;
 }
 
 .home-navbar {
@@ -719,11 +726,6 @@ body.home-carousel {
   font-size: 0.9rem;
 }
 
-.home-footer a {
-  color: var(--home-teal);
-  font-weight: 700;
-}
-
 @keyframes quiz-pop {
   0%, 100% { margin-top: 0; }
   50% { margin-top: -0.6rem; }
@@ -856,8 +858,7 @@ body.home-carousel {
 .home-carousel .home-highlights,
 .home-carousel .home-featurette,
 .home-carousel .home-project-copy,
-.home-carousel .home-final-cta,
-.home-carousel .home-footer {
+.home-carousel .home-final-cta {
   text-align: center;
 }
 
@@ -1062,8 +1063,7 @@ body.home-carousel {
   background: #e7f3ff;
 }
 
-.home-carousel .step-link,
-.home-carousel .home-footer a {
+.home-carousel .step-link {
   color: #1769aa;
 }
 
@@ -1542,10 +1542,6 @@ body.home-carousel {
 
 .home-footer {
   color: #64748b;
-}
-
-.home-footer a {
-  color: #315ce5;
 }
 
 @media (max-width: 767.98px) {

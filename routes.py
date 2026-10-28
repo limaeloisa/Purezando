@@ -1,3 +1,4 @@
+from datetime import timedelta, timezone
 from functools import wraps
 
 from flask import (
@@ -37,6 +38,13 @@ DIFICULDADE_PONTOS = {
     chave: pontos
     for chave, _, pontos in DIFICULDADES_QUIZ
 }
+FUSO_HORARIO_BRASILIA = timezone(timedelta(hours=-3))
+
+
+def formatar_data_historico(data):
+    if data.tzinfo is None:
+        data = data.replace(tzinfo=timezone.utc)
+    return data.astimezone(FUSO_HORARIO_BRASILIA).strftime("%d/%m/%Y %H:%M")
 
 
 def perfil_requerido(perfil):
@@ -790,4 +798,9 @@ def historico():
         app.logger.exception("Erro ao carregar histórico de partidas")
         partidas = []
         erro = "Não foi possível carregar seu histórico."
-    return render_template("public/historico.html", partidas=partidas, erro=erro)
+    return render_template(
+        "public/historico.html",
+        partidas=partidas,
+        erro=erro,
+        formatar_data=formatar_data_historico
+    )

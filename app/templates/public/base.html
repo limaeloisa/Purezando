@@ -69,8 +69,14 @@
   </main>
 
   {% if session.get('tipo_usuario') != 'admin' %}
-    <footer class="bg-dark text-white text-center py-3 mt-5">
-      Purezando Quizz · Quiz educativo sobre Pureza/RN
+    <footer class="app-footer">
+      <div class="container app-footer-content">
+        <div>
+          <a class="app-footer-brand" href="{{ url_for('inicio') }}">Purezando Quizz</a>
+          <p class="app-footer-description">Quiz educativo sobre Pureza/RN</p>
+        </div>
+        <a class="app-footer-link" href="{{ url_for('sobre') }}">Sobre o projeto <span aria-hidden="true">→</span></a>
+      </div>
     </footer>
   {% endif %}
 

@@ -38,7 +38,7 @@
 							{% for partida in partidas %}
 								{% set percentual = ((partida.pontuacao / partida.pontuacao_maxima) * 100)|round|int if partida.pontuacao_maxima > 0 else 0 %}
 								<tr>
-									<td>{{ partida.criado_em.strftime('%d/%m/%Y %H:%M') }}</td>
+									<td class="records-date">{{ formatar_data(partida.criado_em) }}</td>
 									<td class="records-player">{{ partida.categoria }}</td>
 									<td>{{ partida.acertos }} / {{ partida.total_perguntas }}</td>
 									<td>{{ partida.pontuacao }} / {{ partida.pontuacao_maxima }} pts</td>

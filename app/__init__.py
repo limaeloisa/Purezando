@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import inspect, text
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.engine import URL
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -218,3 +219,32 @@ def promover_admin(nome_usuario):
 	usuario.tipo_usuario = "admin"
 	db.session.commit()
 	print(f"{nome_usuario} agora tem perfil de administrador.")
+
+
+@app.cli.command("redefinir-senha-admin")
+@click.argument("nome_usuario")
+def redefinir_senha_admin(nome_usuario):
+	from werkzeug.security import generate_password_hash
+
+	from app.models.usuario import Usuario
+
+	usuario = Usuario.query.filter_by(nome_usuario=nome_usuario).first()
+	if usuario is None or (usuario.tipo_usuario or "").strip().lower() != "admin":
+		raise click.ClickException("Conta de administrador não encontrada.")
+
+	senha = click.prompt(
+		"Nova senha",
+		hide_input=True,
+		confirmation_prompt=True
+	)
+	if len(senha) < 8:
+		raise click.ClickException("A senha deve ter pelo menos 8 caracteres.")
+
+	try:
+		usuario.senha = generate_password_hash(senha)
+		db.session.commit()
+	except SQLAlchemyError:
+		db.session.rollback()
+		raise
+
+	print("Senha do administrador redefinida.")
