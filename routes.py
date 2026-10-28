@@ -10,6 +10,7 @@ from flask import (
     url_for
 )
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import selectinload
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import app, db
@@ -17,6 +18,25 @@ from app.models.categoria import Categoria
 from app.models.pergunta import Pergunta
 from app.models.resultado_quiz import ResultadoQuiz
 from app.models.usuario import Usuario
+
+DIFICULDADES_QUIZ = [
+    ("muito_facil", "Muito fácil", 100),
+    ("facil", "Fácil", 200),
+    ("media", "Média", 300),
+    ("dificil", "Difícil", 400),
+    ("muito_dificil", "Muito difícil", 500),
+    ("desafio", "Desafio", 600),
+    ("especial", "Especial", 700),
+    ("avancado", "Avançado", 800),
+    ("especialista", "Especialista", 900),
+    ("mestre", "Mestre", 1000),
+    ("lendario", "Lendário", 1100),
+    ("supremo", "Supremo", 1200)
+]
+DIFICULDADE_PONTOS = {
+    chave: pontos
+    for chave, _, pontos in DIFICULDADES_QUIZ
+}
 
 
 def perfil_requerido(perfil):
@@ -189,15 +209,25 @@ def cadastro():
 @perfil_requerido("jogador")
 def categorias():
     try:
-        categorias_disponiveis = Categoria.query.order_by(Categoria.nome.asc()).all()
+        categorias_disponiveis = (
+            Categoria.query
+            .options(selectinload(Categoria.perguntas))
+            .order_by(Categoria.nome.asc())
+            .all()
+        )
     except SQLAlchemyError:
         app.logger.exception("Erro ao carregar categorias")
-        categorias_disponiveis = []
-        flash("Não foi possível carregar as categorias.", "error")
-    return render_template(
-        "public/categorias.html",
-        categorias=categorias_disponiveis
-    )
+        flash(
+            "Não foi possível conectar ao banco ou ele precisa de atualização. "
+            "Verifique DB_HOST/DB_PORT no config.env e rode "
+            "`python -m flask --app app init-db`.",
+            "error"
+        )
+        return render_template(
+            "public/categorias.html",
+            categorias=[]
+        ), 503
+    return render_template("public/categorias.html", categorias=categorias_disponiveis)
 
 
 @app.route("/quiz", methods=["GET", "POST"])
@@ -243,7 +273,8 @@ def quiz():
             "correta": "ABCD".index(pergunta.resposta_correta),
             "resposta_correta": pergunta.opcoes[
                 "ABCD".index(pergunta.resposta_correta)
-            ]
+            ],
+            "pontos": pergunta.pontos
         }
         for pergunta in perguntas_db
     ]
@@ -263,16 +294,24 @@ def quiz():
                 erro=erro
             )
 
-        pontuacao = sum(
+        acertos = sum(
             resposta.isdigit() and int(resposta) == pergunta["correta"]
             for resposta, pergunta in zip(respostas, perguntas)
         )
+        pontuacao = sum(
+            pergunta["pontos"]
+            for resposta, pergunta in zip(respostas, perguntas)
+            if resposta.isdigit() and int(resposta) == pergunta["correta"]
+        )
+        pontuacao_maxima = sum(pergunta["pontos"] for pergunta in perguntas)
         persistido = True
         try:
             resultado = ResultadoQuiz(
                 usuario_id=session["usuario_id"],
                 categoria=categoria.nome,
                 pontuacao=pontuacao,
+                pontuacao_maxima=pontuacao_maxima,
+                acertos=acertos,
                 total_perguntas=len(perguntas)
             )
             db.session.add(resultado)
@@ -286,6 +325,8 @@ def quiz():
             "categoria": categoria.nome,
             "categoria_id": categoria.id,
             "pontuacao": pontuacao,
+            "pontuacao_maxima": pontuacao_maxima,
+            "acertos": acertos,
             "total": len(perguntas),
             "persistido": persistido
         }
@@ -332,16 +373,24 @@ def admin():
         perguntas_disponiveis = []
         total_partidas = 0
         banco_ativo = None
-        erro = "Não foi possível carregar os usuários. Verifique a conexão com o banco."
+        erro = (
+            "Não foi possível conectar ao banco ou ele precisa de atualização. "
+            "Verifique DB_HOST/DB_PORT no config.env e rode "
+            "`python -m flask --app app init-db`."
+        )
+        status_code = 503
+    else:
+        status_code = 200
     return render_template(
         "private/admin.html",
         usuarios=usuarios,
         categorias=categorias_disponiveis,
         perguntas=perguntas_disponiveis,
+        niveis_dificuldade=DIFICULDADES_QUIZ,
         total_partidas=total_partidas,
         banco_ativo=banco_ativo,
         erro=erro
-    )
+    ), status_code
 
 
 @app.post("/admin/usuarios/<int:usuario_id>/perfil")
@@ -574,21 +623,31 @@ def ler_pergunta_form():
         request.form.get("opcao_d", "").strip()
     ]
     correta = request.form.get("resposta_correta", "").upper()
+    dificuldade = request.form.get("dificuldade", "")
     if not enunciado or not all(opcoes):
         raise ValueError("Preencha o enunciado e as quatro alternativas.")
     if not categoria_id.isdigit() or correta not in {"A", "B", "C", "D"}:
         raise ValueError("Selecione uma categoria e a alternativa correta.")
+    if dificuldade not in DIFICULDADE_PONTOS:
+        raise ValueError("Selecione uma dificuldade válida.")
     categoria = db.session.get(Categoria, int(categoria_id))
     if categoria is None:
         raise ValueError("A categoria selecionada não existe.")
-    return enunciado, categoria, opcoes, correta
+    return (
+        enunciado,
+        categoria,
+        opcoes,
+        correta,
+        dificuldade,
+        DIFICULDADE_PONTOS[dificuldade]
+    )
 
 
 @app.post("/admin/perguntas")
 @perfil_requerido("admin")
 def criar_pergunta():
     try:
-        enunciado, categoria, opcoes, correta = ler_pergunta_form()
+        enunciado, categoria, opcoes, correta, dificuldade, pontos = ler_pergunta_form()
         db.session.add(Pergunta(
             enunciado=enunciado,
             categoria_id=categoria.id,
@@ -596,7 +655,9 @@ def criar_pergunta():
             opcao_b=opcoes[1],
             opcao_c=opcoes[2],
             opcao_d=opcoes[3],
-            resposta_correta=correta
+            resposta_correta=correta,
+            pontos=pontos,
+            dificuldade=dificuldade
         ))
         db.session.commit()
         flash("Pergunta criada.", "success")
@@ -617,7 +678,7 @@ def editar_pergunta(pergunta_id):
         pergunta = db.session.get(Pergunta, pergunta_id)
         if pergunta is None:
             abort(404)
-        enunciado, categoria, opcoes, correta = ler_pergunta_form()
+        enunciado, categoria, opcoes, correta, dificuldade, pontos = ler_pergunta_form()
         pergunta.enunciado = enunciado
         pergunta.categoria_id = categoria.id
         pergunta.opcao_a = opcoes[0]
@@ -625,6 +686,8 @@ def editar_pergunta(pergunta_id):
         pergunta.opcao_c = opcoes[2]
         pergunta.opcao_d = opcoes[3]
         pergunta.resposta_correta = correta
+        pergunta.pontos = pontos
+        pergunta.dificuldade = dificuldade
         db.session.commit()
         flash("Pergunta atualizada.", "success")
     except ValueError as error:
@@ -683,10 +746,11 @@ def ranking():
                 ResultadoQuiz.categoria == categoria_selecionada.nome
             )
         aproveitamento = (
-            ResultadoQuiz.pontuacao * 1.0 / ResultadoQuiz.total_perguntas
+            ResultadoQuiz.pontuacao * 1.0 / ResultadoQuiz.pontuacao_maxima
         )
         resultados = (
             consulta
+            .filter(ResultadoQuiz.pontuacao_maxima > 0)
             .order_by(
                 aproveitamento.desc(),
                 ResultadoQuiz.pontuacao.desc(),

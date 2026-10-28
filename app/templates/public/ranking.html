@@ -1,6 +1,6 @@
 {% extends "public/base.html" %}
 
-{% block title %}Ranking | Conheça Pureza{% endblock %}
+{% block title %}Ranking | Purezando Quizz{% endblock %}
 
 {% block css %}
 	<link rel="stylesheet" href="{{ url_for('static', filename='public/css/records.css') }}">
@@ -35,7 +35,11 @@
 
 		{% if resultado_recente %}
 			<div class="alert alert-success records-notice" role="status">
-				<span>Você fez <strong>{{ resultado_recente.pontuacao }} de {{ resultado_recente.total }}</strong> em {{ resultado_recente.categoria }}.</span>
+				{% set pontos_possiveis = resultado_recente.get('pontuacao_maxima', resultado_recente.total) %}
+				{% set acertos_recentes = resultado_recente.get('acertos', resultado_recente.pontuacao) %}
+				{% set acerto_label = 'acerto' if acertos_recentes == 1 else 'acertos' %}
+				{% set pergunta_label = 'pergunta' if resultado_recente.total == 1 else 'perguntas' %}
+				<span>Você fez <strong>{{ resultado_recente.pontuacao }} de {{ pontos_possiveis }} pontos</strong>, com {{ acertos_recentes }} {{ acerto_label }} em {{ resultado_recente.total }} {{ pergunta_label }}, em {{ resultado_recente.categoria }}.</span>
 				<a class="alert-link" href="{{ url_for('resultado') }}">Ver resultado da partida</a>
 			</div>
 		{% endif %}
@@ -53,7 +57,7 @@
 				</div>
 				<ol class="ranking-bars">
 					{% for resultado in resultados %}
-						{% set percentual = ((resultado.pontuacao / resultado.total_perguntas) * 100)|round|int if resultado.total_perguntas > 0 else 0 %}
+						{% set percentual = ((resultado.pontuacao / resultado.pontuacao_maxima) * 100)|round|int if resultado.pontuacao_maxima > 0 else 0 %}
 						<li class="ranking-bar-item">
 							<div class="ranking-bar-label">
 								<span><span class="ranking-position">{{ loop.index }}</span>{{ resultado.usuario.nome_usuario }}</span>
@@ -77,17 +81,18 @@
 				<div class="table-responsive">
 					<table class="table records-table align-middle">
 						<thead>
-							<tr><th scope="col">Posição</th><th scope="col">Jogador</th><th scope="col">Categoria</th><th scope="col">Acertos</th><th scope="col">Erros</th><th scope="col">Aproveitamento</th></tr>
+							<tr><th scope="col">Posição</th><th scope="col">Jogador</th><th scope="col">Categoria</th><th scope="col">Acertos</th><th scope="col">Pontos</th><th scope="col">Média por questão</th><th scope="col">Aproveitamento</th></tr>
 						</thead>
 						<tbody>
 							{% for resultado in resultados %}
-								{% set percentual = ((resultado.pontuacao / resultado.total_perguntas) * 100)|round|int if resultado.total_perguntas > 0 else 0 %}
+								{% set percentual = ((resultado.pontuacao / resultado.pontuacao_maxima) * 100)|round|int if resultado.pontuacao_maxima > 0 else 0 %}
 								<tr>
 									<th scope="row"><span class="ranking-table-position">{{ loop.index }}</span></th>
 									<td class="records-player">{{ resultado.usuario.nome_usuario }}</td>
 									<td>{{ resultado.categoria|capitalize }}</td>
-									<td>{{ resultado.pontuacao }} / {{ resultado.total_perguntas }}</td>
-									<td>{{ resultado.total_perguntas - resultado.pontuacao }}</td>
+									<td>{{ resultado.acertos }} / {{ resultado.total_perguntas }}</td>
+									<td>{{ resultado.pontuacao }} / {{ resultado.pontuacao_maxima }} pts</td>
+									<td>{{ (resultado.pontuacao / resultado.total_perguntas)|round|int if resultado.total_perguntas > 0 else 0 }} pts</td>
 									<td><span class="records-percentage">{{ percentual }}%</span></td>
 								</tr>
 							{% endfor %}

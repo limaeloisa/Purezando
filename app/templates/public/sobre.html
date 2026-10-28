@@ -1,10 +1,50 @@
 {% extends "public/base.html" %}
 
-{% block title %}Sobre | Conheça Pureza{% endblock %}
+{% block title %}Sobre | Purezando Quizz{% endblock %}
+
+{% block body_class %}project-shell{% endblock %}
 
 {% block content %}
-<section class="container py-5">
-	<h1>Sobre o projeto</h1>
-	<p>Conheça Pureza é um quiz educativo sobre a história, a cultura e a geografia de Pureza, no Rio Grande do Norte.</p>
+<section class="project-page">
+	<div class="container project-container">
+		<header class="project-heading">
+			<img src="{{ url_for('static', filename='public/assets/img/purezando.png') }}" alt="Logo Purezando">
+			<p class="project-kicker">QUIZ EDUCATIVO · RIO GRANDE DO NORTE</p>
+			<h1>Purezando Quizz</h1>
+			<p>Uma forma interativa de descobrir as histórias, a cultura e os lugares que fazem parte do município.</p>
+		</header>
+
+		<div class="project-card-grid">
+			<article class="project-card">
+				<span class="project-card-number" aria-hidden="true">01</span>
+				<h2>Sobre o projeto</h2>
+				<p>O Purezando Quizz é um quiz educativo que reúne perguntas sobre a história, a cultura e a geografia de Pureza/RN. A dificuldade de cada questão define seu valor, de 100 a 1200 pontos, somados quando a resposta está correta.</p>
+			</article>
+			<article class="project-card project-team-card">
+				<span class="project-card-number" aria-hidden="true">02</span>
+				<h2>Desenvolvimento em equipe</h2>
+				<p>O aplicativo foi criado para ser apresentado em feiras, aproximar as pessoas do município e tornar a história, a cultura e os conhecimentos sobre Pureza mais conhecidos. Eloisa e Saul desenvolveram juntos o front-end e o back-end.</p>
+				<div class="project-developers">
+					<article class="developer-card">
+						<span class="project-team-mark" aria-hidden="true">EL</span>
+						<h3>Eloisa Lima</h3>
+						<p>Estudante do último ano de Informática no IFRN e estagiária na Prefeitura Municipal de Pureza.</p>
+						<span class="developer-role">Desenvolvimento front-end e back-end</span>
+					</article>
+					<article class="developer-card">
+						<span class="project-team-mark" aria-hidden="true">SN</span>
+						<h3>Saul Nascimento</h3>
+						<p>Estudante do último ano de Informática no IFRN e estagiário na Prefeitura Municipal de Pureza.</p>
+						<span class="developer-role">Desenvolvimento front-end e back-end</span>
+					</article>
+				</div>
+			</article>
+		</div>
+
+		<div class="project-actions">
+			<a class="btn btn-primary" href="{{ url_for('categorias') if session.get('tipo_usuario') == 'jogador' else url_for('cadastro') }}">Explorar o quiz <span aria-hidden="true">→</span></a>
+			<a class="project-home-link" href="{{ url_for('inicio') }}">Voltar ao início</a>
+		</div>
+	</div>
 </section>
 {% endblock %}

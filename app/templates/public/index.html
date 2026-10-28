@@ -3,262 +3,304 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Purezando Quizz: teste seus conhecimentos sobre Pureza/RN em um quiz educativo.">
 
-  <title>Purezando</title>
+  <title>Purezando Quizz | Quiz educativo</title>
 
   <link
     rel="icon"
     type="image/x-icon"
     href="{{ url_for('static', filename='public/assets/favicon.ico') }}"
   >
-
   <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
-    rel="stylesheet"
-  >
-
-  <link
-    href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic"
-    rel="stylesheet"
-  >
-
-  <link
-    href="{{ url_for('static', filename='public/css/styles.css') }}"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
     rel="stylesheet"
   >
   <link
-    href="{{ url_for('static', filename='public/css/brand.css') }}"
+    href="{{ url_for('static', filename='public/css/home-carousel.css') }}"
     rel="stylesheet"
   >
 </head>
 
-<body class="home-shell">
-  <header class="masthead">
-    <div class="container position-relative">
-      <div class="row justify-content-center">
-        <div class="col-xl-8">
-          <div class="text-center text-white">
-            <img
-              class="img-fluid mb-5"
-              src="{{ url_for('static', filename='public/assets/img/purezando.png') }}"
-              alt="Logo do quiz"
-            >
-            <p class="lead mb-4">
-              Teste seus conhecimentos sobre a história, cultura,
-              geografia, comunidades e curiosidades do município.
-            </p>
+<body class="home-carousel">
+  <header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top home-navbar">
+      <div class="container">
+        <a class="navbar-brand home-brand" href="{{ url_for('inicio') }}">
+          <img src="{{ url_for('static', filename='public/assets/img/purezando.png') }}" alt="">
+          <span>Purezando Quizz</span>
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#homeNavigation"
+          aria-controls="homeNavigation"
+          aria-expanded="false"
+          aria-label="Abrir ou fechar navegação"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <a href="/cadastro" class="btn btn-primary btn-lg px-5">
-              Começar quiz
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <section class="features-icons bg-light text-center">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-4">
-          <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
-            <div class="features-icons-icon d-flex">
-              <i class="bi-book m-auto text-primary"></i>
-            </div>
-
-            <h3>Aprenda jogando</h3>
-
-            <p class="lead mb-0">
-              Descubra informações sobre Pureza/RN de forma leve,
-              interativa e divertida.
-            </p>
-          </div>
-        </div>
-
-        <div class="col-lg-4">
-          <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
-            <div class="features-icons-icon d-flex">
-              <i class="bi-grid-3x3-gap m-auto text-primary"></i>
-            </div>
-
-            <h3>Escolha uma categoria</h3>
-
-            <p class="lead mb-0">
-              Responda perguntas sobre história, cultura, geografia
-              e curiosidades locais.
-            </p>
-          </div>
-        </div>
-
-        <div class="col-lg-4">
-          <div class="features-icons-item mx-auto mb-0 mb-lg-3">
-            <div class="features-icons-icon d-flex">
-              <i class="bi-trophy m-auto text-primary"></i>
-            </div>
-
-            <h3>Confira seu resultado</h3>
-
-            <p class="lead mb-0">
-              Acompanhe seus acertos, sua pontuação e sua posição no ranking.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="showcase">
-    <div class="container-fluid p-0">
-      <div class="row g-0">
-        <div
-          class="col-lg-6 order-lg-2 text-white showcase-img"
-          style="background-image: url('{{ url_for('static', filename='public/assets/img/bg-showcase-1.jpg') }}')"
-        ></div>
-
-        <div class="col-lg-6 order-lg-1 my-auto showcase-text">
-          <h2>História de Pureza</h2>
-
-          <p class="lead mb-0">
-            Conheça fatos importantes, origens e acontecimentos
-            que fazem parte da história do município.
-          </p>
-        </div>
-      </div>
-
-      <div class="row g-0">
-        <div
-          class="col-lg-6 text-white showcase-img"
-          style="background-image: url('{{ url_for('static', filename='public/assets/img/bg-showcase-2.jpg') }}')"
-        ></div>
-
-        <div class="col-lg-6 my-auto showcase-text">
-          <h2>Cultura e comunidades</h2>
-
-          <p class="lead mb-0">
-            Descubra tradições, costumes, comunidades e características
-            que ajudam a contar a identidade de Pureza/RN.
-          </p>
-        </div>
-      </div>
-
-      <div class="row g-0">
-        <div
-          class="col-lg-6 order-lg-2 text-white showcase-img"
-          style="background-image: url('{{ url_for('static', filename='public/assets/img/bg-showcase-3.jpg') }}')"
-        ></div>
-
-        <div class="col-lg-6 order-lg-1 my-auto showcase-text">
-          <h2>Teste seus conhecimentos</h2>
-
-          <p class="lead mb-0">
-            Escolha uma categoria, responda às perguntas e veja
-            quanto você sabe sobre o município.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="testimonials text-center bg-light">
-    <div class="container">
-      <h2 class="mb-5">Categorias do quiz</h2>
-
-      <div class="row">
-        <div class="col-lg-4">
-          <div class="testimonial-item mx-auto mb-5 mb-lg-0">
-            <i class="bi-clock-history text-primary display-4"></i>
-
-            <h5 class="mt-3">História</h5>
-
-            <p class="font-weight-light mb-0">
-              Perguntas sobre acontecimentos e origens de Pureza/RN.
-            </p>
-          </div>
-        </div>
-
-        <div class="col-lg-4">
-          <div class="testimonial-item mx-auto mb-5 mb-lg-0">
-            <i class="bi-people text-primary display-4"></i>
-
-            <h5 class="mt-3">Cultura</h5>
-
-            <p class="font-weight-light mb-0">
-              Perguntas sobre tradições, costumes e comunidades locais.
-            </p>
-          </div>
-        </div>
-
-        <div class="col-lg-4">
-          <div class="testimonial-item mx-auto mb-5 mb-lg-0">
-            <i class="bi-geo-alt text-primary display-4"></i>
-
-            <h5 class="mt-3">Geografia</h5>
-
-            <p class="font-weight-light mb-0">
-              Perguntas sobre localização, território e curiosidades da cidade.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="call-to-action text-white text-center">
-    <div class="container position-relative">
-      <div class="row justify-content-center">
-        <div class="col-xl-8">
-          <h2 class="mb-4">Pronto para começar?</h2>
-
-          <p class="lead mb-4">
-            Entre no quiz e descubra mais sobre Pureza/RN.
-          </p>
-
-          <a href="/cadastro" class="btn btn-primary btn-lg px-5">
-            Iniciar agora
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <footer class="footer bg-light">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-6 h-100 text-center text-lg-start my-auto">
-          <ul class="list-inline mb-2">
-            <li class="list-inline-item">
-              <a href="/">Início</a>
+        <div class="collapse navbar-collapse" id="homeNavigation">
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{ url_for('inicio') }}">Início</a>
             </li>
-
-            <li class="list-inline-item">⋅</li>
-
-            <li class="list-inline-item">
-              <a href="/categorias">Quiz</a>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('sobre') }}">Sobre Pureza</a>
             </li>
-
-            <li class="list-inline-item">⋅</li>
-
-            <li class="list-inline-item">
-              <a href="/ranking">Ranking</a>
+            <li class="nav-item">
+              <a class="nav-link" href="#projeto">Projeto e equipe</a>
             </li>
+            {% if session.get('tipo_usuario') == 'jogador' %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('categorias') }}">Quiz</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('ranking') }}">Ranking</a>
+              </li>
+            {% endif %}
           </ul>
 
-          <p class="text-muted small mb-4 mb-lg-0">
-            &copy; 2026 Conheça Pureza — Quiz Educativo.
-          </p>
-        </div>
-
-        <div class="col-lg-6 h-100 text-center text-lg-end my-auto">
-          <p class="text-muted small mb-0">
-            Layout baseado no template Landing Page do Start Bootstrap.
-          </p>
+          <div class="d-flex align-items-md-center gap-2 flex-column flex-md-row">
+            {% if session.get('tipo_usuario') == 'admin' %}
+              <a class="btn btn-outline-light btn-sm" href="{{ url_for('admin') }}">Painel admin</a>
+            {% elif session.get('usuario_id') %}
+              <span class="navbar-text">{{ session.get('nome_usuario') }}</span>
+              <form action="{{ url_for('logout') }}" method="post">
+                <button class="btn btn-outline-light btn-sm" type="submit">Sair</button>
+              </form>
+            {% else %}
+              <a class="nav-link" href="{{ url_for('login') }}">Entrar</a>
+              <a class="btn btn-light btn-sm home-nav-cta" href="{{ url_for('cadastro') }}">Criar conta</a>
+            {% endif %}
+          </div>
         </div>
       </div>
+    </nav>
+  </header>
+
+  <main>
+    <section id="homeCarousel" class="carousel slide home-hero" data-bs-ride="carousel" aria-label="Destaques de Purezando Quizz">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Primeiro destaque"></button>
+        <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="1" aria-label="Segundo destaque"></button>
+        <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="2" aria-label="Terceiro destaque"></button>
+      </div>
+
+      <div class="carousel-inner">
+        <div class="carousel-item active home-slide home-slide-play">
+          <div class="carousel-caption text-start">
+            <p class="home-eyebrow">Um quiz sobre Pureza/RN</p>
+            <h1>Conheça Pureza de um novo jeito</h1>
+            <p>Explore a história, a cultura e as curiosidades do município em um quiz educativo.</p>
+            <p>
+              <a class="btn btn-lg btn-primary" href="{{ url_for('categorias') if session.get('tipo_usuario') == 'jogador' else url_for('cadastro') }}">
+                {{ 'Jogar agora' if session.get('tipo_usuario') == 'jogador' else 'Começar' }}
+                <span aria-hidden="true"> →</span>
+              </a>
+            </p>
+          </div>
+          <div class="quiz-preview" aria-label="Exemplo de pergunta do quiz">
+            <div class="quiz-preview-top">
+              <span class="quiz-pill">PERGUNTA 01</span>
+              <span class="quiz-hearts">3 questões</span>
+            </div>
+            <p class="quiz-preview-question">Pureza fica em qual estado?</p>
+            <div class="quiz-answer"><span>A</span> Paraíba</div>
+            <div class="quiz-answer"><span>B</span> Ceará</div>
+            <div class="quiz-answer quiz-answer-correct"><span>C</span> Rio Grande do Norte <b>✓</b></div>
+            <div class="quiz-progress"><span></span></div>
+            <small>CONHECIMENTO EM CADA RESPOSTA</small>
+          </div>
+        </div>
+
+        <div class="carousel-item home-slide home-slide-categories">
+          <div class="carousel-caption">
+            <p class="home-eyebrow">Explore diferentes temas</p>
+            <h2>Descubra o que torna Pureza única</h2>
+            <p>Conheça aspectos da história, cultura e geografia local, uma pergunta de cada vez.</p>
+            <p>
+              <a class="btn btn-lg btn-primary" href="{{ url_for('categorias') if session.get('tipo_usuario') == 'jogador' else url_for('cadastro') }}">
+                {{ 'Escolher categoria' if session.get('tipo_usuario') == 'jogador' else 'Criar conta e jogar' }}
+                <span aria-hidden="true"> →</span>
+              </a>
+            </p>
+          </div>
+          <div class="category-stack" aria-hidden="true">
+            <div class="category-tile tile-history"><b>História</b></div>
+            <div class="category-tile tile-culture"><b>Cultura</b></div>
+            <div class="category-tile tile-map"><b>Geografia</b></div>
+          </div>
+        </div>
+
+        <div class="carousel-item home-slide home-slide-score">
+          <div class="carousel-caption text-end">
+            <p class="home-eyebrow">Acompanhe seu desempenho</p>
+            <h2>Seu conhecimento em destaque</h2>
+            <p>Responda às perguntas, acompanhe seus resultados e compare sua pontuação no ranking.</p>
+            <p>
+              <a class="btn btn-lg btn-primary" href="{{ url_for('ranking') if session.get('tipo_usuario') == 'jogador' else url_for('login') }}">
+                {{ 'Ver ranking' if session.get('tipo_usuario') == 'jogador' else 'Entrar para ver o ranking' }}
+                <span aria-hidden="true"> →</span>
+              </a>
+            </p>
+          </div>
+          <div class="score-preview" aria-label="Exemplo de pontuação">
+            <small>ESCOLHA A DIFICULDADE</small>
+            <strong>+300 <span>pts</span></strong>
+            <div class="score-streak">Dificuldade média · por acerto</div>
+            <div class="score-levels" aria-label="Pontuação por nível de dificuldade">
+              <span><b>Muito fácil</b><strong>100</strong></span>
+              <span><b>Fácil</b><strong>200</strong></span>
+              <span><b>Média</b><strong>300</strong></span>
+              <span><b>Difícil</b><strong>400</strong></span>
+              <span><b>Muito difícil</b><strong>500</strong></span>
+              <span><b>Desafio</b><strong>600</strong></span>
+              <span><b>Especial</b><strong>700</strong></span>
+              <span><b>Avançado</b><strong>800</strong></span>
+              <span><b>Especialista</b><strong>900</strong></span>
+              <span><b>Mestre</b><strong>1.000</strong></span>
+              <span><b>Lendário</b><strong>1.100</strong></span>
+              <span><b>Supremo</b><strong>1.200</strong></span>
+            </div>
+            <p class="score-range-note">A dificuldade define a pontuação. Você soma os pontos quando acerta.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="carousel-control-prev" type="button" data-bs-target="#homeCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#homeCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Próximo</span>
+      </button>
+    </section>
+
+    <div class="container home-content">
+      <section class="home-steps" aria-labelledby="stepsTitle">
+        <div class="home-section-heading">
+          <span class="section-kicker">Como funciona</span>
+          <h2 id="stepsTitle">Uma experiência simples e educativa</h2>
+          <p>Escolha um tema, responda às perguntas e acompanhe seu progresso.</p>
+        </div>
+        <div class="row home-highlights" aria-label="Como funciona o quiz">
+          <article class="col-lg-4">
+            <div class="step-icon step-icon-yellow" aria-hidden="true">01</div>
+            <span class="step-number">PASSO 1</span>
+            <h3>Escolha uma categoria</h3>
+            <p>História, cultura, geografia e curiosidades estão organizadas por tema.</p>
+            <p><a class="step-link" href="{{ url_for('categorias') if session.get('tipo_usuario') == 'jogador' else url_for('cadastro') }}">Consultar categorias <span aria-hidden="true">→</span></a></p>
+          </article>
+
+          <article class="col-lg-4">
+            <div class="step-icon step-icon-coral" aria-hidden="true">02</div>
+            <span class="step-number">PASSO 2</span>
+            <h3>Responda e aprenda</h3>
+            <p>Responda às questões e conheça informações sobre o município.</p>
+            <p><a class="step-link" href="{{ url_for('sobre') }}">Conhecer o projeto <span aria-hidden="true">→</span></a></p>
+          </article>
+
+          <article class="col-lg-4">
+            <div class="step-icon step-icon-mint" aria-hidden="true">03</div>
+            <span class="step-number">PASSO 3</span>
+            <h3>Acompanhe seu desempenho</h3>
+            <p>Veja sua pontuação e consulte sua posição no ranking.</p>
+            <p><a class="step-link" href="{{ url_for('ranking') if session.get('tipo_usuario') == 'jogador' else url_for('login') }}">Consultar ranking <span aria-hidden="true">→</span></a></p>
+          </article>
+        </div>
+      </section>
+
+      <hr class="home-divider">
+
+      <section class="home-project-section" id="projeto" aria-labelledby="projectTitle">
+        <div class="home-project-logo">
+          <img src="{{ url_for('static', filename='public/assets/img/purezando.png') }}" alt="Logo Purezando">
+          <span>PUREZA · RIO GRANDE DO NORTE</span>
+        </div>
+        <div class="home-project-copy">
+          <span class="section-kicker">Por trás do quiz</span>
+          <h2 id="projectTitle">Conheça o projeto e quem faz acontecer</h2>
+          <p>O Purezando Quizz aproxima moradores e visitantes da história, da cultura e da geografia do município por meio de perguntas, descobertas e desafios.</p>
+          <p>O app foi criado para ser apresentado em feiras e ajudar a tornar a história, a cultura e os conhecimentos sobre Pureza mais conhecidos.</p>
+          <div class="project-developers" aria-label="Desenvolvedores do projeto">
+            <article class="developer-card">
+              <span class="project-team-mark" aria-hidden="true">EL</span>
+              <h3>Eloisa Lima</h3>
+              <p>Estudante do último ano de Informática no IFRN e estagiária na Prefeitura Municipal de Pureza.</p>
+              <span class="developer-role">Front-end e back-end</span>
+            </article>
+            <article class="developer-card">
+              <span class="project-team-mark" aria-hidden="true">SN</span>
+              <h3>Saul Nascimento</h3>
+              <p>Estudante do último ano de Informática no IFRN e estagiário na Prefeitura Municipal de Pureza.</p>
+              <span class="developer-role">Front-end e back-end</span>
+            </article>
+          </div>
+          <a class="btn btn-outline-primary" href="{{ url_for('sobre') }}">Conhecer o projeto e a equipe <span aria-hidden="true">→</span></a>
+        </div>
+      </section>
+
+      <hr class="home-divider">
+
+      <section class="row home-featurette align-items-center">
+        <div class="col-md-7">
+          <span class="section-kicker">Conheça o município</span>
+          <h2>História, cultura e <span class="text-muted">identidade local</span></h2>
+          <p class="lead">Pureza reúne histórias, tradições e lugares especiais. O quiz apresenta esses aspectos de forma acessível e ajuda você a conhecer melhor o município.</p>
+          <a class="btn btn-outline-primary" href="{{ url_for('sobre') }}">Conhecer o projeto <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="col-md-5">
+          <div class="fun-illustration illustration-map" aria-hidden="true">
+            <img class="home-feature-logo" src="{{ url_for('static', filename='public/assets/img/purezando.png') }}" alt="Logo Purezando">
+            <span class="illustration-caption">RIO GRANDE DO NORTE</span>
+          </div>
+        </div>
+      </section>
+
+      <hr class="home-divider">
+
+      <section class="row home-featurette align-items-center">
+        <div class="col-md-7 order-md-2">
+          <span class="section-kicker">Acompanhe os resultados</span>
+          <h2>Compare seu desempenho</h2>
+          <p class="lead">Consulte o ranking, acompanhe sua evolução e descubra como sua pontuação se compara à dos demais jogadores.</p>
+          <a class="btn btn-outline-primary" href="{{ url_for('ranking') if session.get('tipo_usuario') == 'jogador' else url_for('login') }}">Consultar ranking <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="col-md-5 order-md-1">
+          <div class="leaderboard-card" aria-label="Exemplo de ranking">
+            <div class="leaderboard-heading">DESTAQUES DO RANKING</div>
+            <div class="leaderboard-row"><span class="leaderboard-medal">01</span><span>Jogador em destaque</span><b>980 pts</b></div>
+            <div class="leaderboard-row"><span class="leaderboard-medal">02</span><span>Segundo colocado</span><b>850 pts</b></div>
+            <div class="leaderboard-row"><span class="leaderboard-medal">03</span><span>Sua próxima posição</span><b>??? pts</b></div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="home-divider">
+
+      <section class="home-final-cta text-center">
+        <span class="section-kicker">Comece agora</span>
+        <h2>Amplie seu conhecimento sobre Pureza</h2>
+        <p>Crie sua conta e explore os temas disponíveis no quiz.</p>
+        <a class="btn btn-lg btn-primary" href="{{ url_for('categorias') if session.get('tipo_usuario') == 'jogador' else url_for('cadastro') }}">
+          {{ 'Começar a jogar' if session.get('tipo_usuario') == 'jogador' else 'Criar conta' }}
+          <span aria-hidden="true"> →</span>
+        </a>
+      </section>
+
+      <hr class="home-divider">
     </div>
+  </main>
+
+  <footer class="container home-footer">
+    <p class="float-end"><a href="#">Voltar ao topo</a></p>
+    <p>&copy; 2026 Purezando Quizz — Quiz Educativo sobre Pureza/RN. &middot; <a href="{{ url_for('sobre') }}">Sobre o projeto</a></p>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-
-  <script src="{{ url_for('static', filename='public/js/scripts.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,6 +1,5 @@
 from app import db
 
-
 class Pergunta(db.Model):
     __tablename__ = "perguntas"
 
@@ -16,6 +15,13 @@ class Pergunta(db.Model):
     opcao_c = db.Column("alternativa_C", db.String(255), nullable=False)
     opcao_d = db.Column("alternativa_D", db.String(255), nullable=False)
     resposta_correta = db.Column(db.String(1), nullable=False)
+    pontos = db.Column(db.Integer, nullable=False, default=100, server_default="100")
+    dificuldade = db.Column(
+        db.String(20),
+        nullable=False,
+        default="muito_facil",
+        server_default="muito_facil"
+    )
 
     categoria = db.relationship("Categoria", back_populates="perguntas")
 

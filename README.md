@@ -1,4 +1,4 @@
-# PUREZANDO
+# PUREZANDO QUIZZ
 
 Quiz educativo sobre Pureza/RN, com áreas de jogador e administrador.
 
@@ -34,15 +34,31 @@ arquivos estáticos.
 	SECRET_KEY=gere-uma-chave-segura
 	```
 
-3. Crie as tabelas: `python -m flask --app app init-db`.
+3. Crie/atualize as tabelas e os dados de exemplo: `python -m flask --app app init-db`.
 4. Inicie o servidor: `python app.py` e abra `http://127.0.0.1:5000`.
 
 O comando `init-db` cria as tabelas e inclui três categorias com perguntas de
 exemplo na primeira inicialização. No painel `/admin`, é possível criar, editar
 e excluir usuários, categorias e perguntas. A senha é armazenada com hash.
 
-Cada pergunta tem enunciado, categoria, quatro alternativas e a alternativa
-correta, necessários para o quiz calcular e salvar a pontuação.
+Cada pergunta tem enunciado, categoria, quatro alternativas, a alternativa
+correta e um nível de dificuldade escolhido no painel administrativo. A
+dificuldade define automaticamente a pontuação, de 100 a 1200 pontos em
+incrementos de 100: muito fácil, fácil, média, difícil, muito difícil, desafio,
+especial, avançado, especialista, mestre, lendário e supremo. Só respostas
+corretas somam pontos. O resultado, a média por questão, o aproveitamento, o
+histórico e o ranking usam os pontos definidos para cada pergunta.
+
+Ao atualizar uma instalação existente, execute
+`python -m flask --app app init-db` para adicionar os campos ausentes de
+pontuação e dificuldade. A migração é executada explicitamente para que a
+indisponibilidade temporária do banco não impeça a página inicial de abrir.
+As perguntas já cadastradas recebem uma
+dificuldade correspondente à pontuação anterior: até 100 pontos vira muito
+fácil; até 200, fácil; até 300, média; até 400, difícil; até 500, muito difícil;
+até 600, desafio; até 700, especial; até 800, avançado; até 900, especialista;
+até 1000, mestre; até 1100, lendário; acima disso, supremo. Resultados antigos
+mantêm a pontuação e os acertos que tinham antes da atualização.
 
 Para MySQL, configure `DB_DRIVER=mysql` e as variáveis `DB_USER`, `DB_PASSWORD`,
 `DB_HOST`, `DB_PORT` e `DB_NAME` no `config.env`. Quando essas configurações

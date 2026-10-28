@@ -1,22 +1,48 @@
 {% extends "public/base.html" %}
 
-{% block title %}Seu resultado | Conheça Pureza{% endblock %}
+{% block title %}Seu resultado | Purezando Quizz{% endblock %}
+
+{% block body_class %}game-result-shell{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='public/css/game.css') }}">
+{% endblock %}
 
 {% block content %}
-<section class="container py-5">
-	<div class="mx-auto text-center" style="max-width: 640px">
-		<p class="text-uppercase fw-bold text-success">{{ resultado.categoria }}</p>
-		<h1 class="mb-3">Quiz concluído</h1>
-		<p class="display-4 fw-bold text-primary mb-1">{{ resultado.pontuacao }} / {{ resultado.total }}</p>
-		<p class="text-secondary">respostas corretas</p>
+<section class="game-result-page">
+	{% set pontuacao_maxima = resultado.get('pontuacao_maxima', resultado.total) %}
+	{% set acertos = resultado.get('acertos', resultado.pontuacao) %}
+	{% set aproveitamento = ((resultado.pontuacao / pontuacao_maxima) * 100)|round|int if pontuacao_maxima > 0 else 0 %}
+	{% set acerto_label = 'acerto correto' if acertos == 1 else 'acertos corretos' %}
+	{% set pergunta_label = 'pergunta' if resultado.total == 1 else 'perguntas' %}
+
+	<div class="game-result-card">
+		<div class="game-result-medal" aria-hidden="true">✦</div>
+		<p class="game-kicker">Desafio concluído · {{ resultado.categoria }}</p>
+		<h1>Mandou bem!</h1>
+		<p class="game-result-intro">Cada pergunta é uma nova descoberta sobre Pureza.</p>
+
+		<div class="game-score-panel">
+			<span>Sua pontuação</span>
+			<strong>{{ resultado.pontuacao }} <small>/ {{ pontuacao_maxima }} pts</small></strong>
+			<div class="game-score-track" role="progressbar" aria-label="Pontuação do quiz" aria-valuemin="0" aria-valuemax="{{ pontuacao_maxima }}" aria-valuenow="{{ resultado.pontuacao }}">
+				<span style="width: {{ aproveitamento }}%"></span>
+			</div>
+		</div>
+
+		<div class="game-result-stats">
+			<div><strong>{{ acertos }}<small>/{{ resultado.total }}</small></strong><span>{{ acerto_label }}</span></div>
+			<div><strong>{{ aproveitamento }}<small>%</small></strong><span>de aproveitamento</span></div>
+			<div><strong>{{ (resultado.pontuacao / resultado.total)|round|int if resultado.total > 0 else 0 }}</strong><span>média de pontos</span></div>
+		</div>
 
 		{% if not resultado.persistido %}
-			<p class="alert alert-warning" role="status">Sua pontuação foi exibida, mas não foi salva no ranking porque o banco está indisponível.</p>
+			<p class="alert alert-warning mt-4 mb-0" role="status">Sua pontuação foi exibida, mas não foi salva no ranking porque o banco está indisponível.</p>
 		{% endif %}
 
-		<div class="d-flex flex-wrap justify-content-center gap-2 mt-4">
-			<a class="btn btn-primary" href="{{ url_for('categorias') }}">Jogar novamente</a>
-			<a class="btn btn-outline-secondary" href="{{ url_for('ranking', categoria=resultado.categoria_id) }}">Ver ranking da categoria</a>
+		<div class="game-result-actions">
+			<a class="game-start-button" href="{{ url_for('categorias') }}">Jogar novamente <span aria-hidden="true">→</span></a>
+			<a class="game-ranking-link" href="{{ url_for('ranking', categoria=resultado.categoria_id) }}">Ver ranking da categoria</a>
 		</div>
 	</div>
 </section>

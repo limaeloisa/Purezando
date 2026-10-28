@@ -36,8 +36,8 @@
 
     const correct = Number(answer.value) === Number(question.dataset.correct);
     feedback.textContent = correct
-      ? "Resposta correta!"
-      : `Não foi dessa vez. A resposta correta é: ${question.dataset.correctAnswer}`;
+      ? `Resposta correta! Você ganhou ${question.dataset.points} pontos.`
+      : `Não foi dessa vez. Esta questão valia ${question.dataset.points} pontos. A resposta correta é: ${question.dataset.correctAnswer}`;
     feedback.classList.toggle("is-incorrect", !correct);
     feedback.hidden = false;
     return true;

@@ -1,36 +1,54 @@
 {% extends "public/base.html" %}
 
-{% block title %}Categorias | Conheça Pureza{% endblock %}
+{% block title %}Categorias | Purezando Quizz{% endblock %}
 
 {% block body_class %}category-shell{% endblock %}
 
+{% block css %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='public/css/game.css') }}">
+{% endblock %}
+
 {% block content %}
-<section class="container py-5">
-  <div class="mb-4">
-    <p class="text-uppercase fw-bold text-success mb-1">Quiz</p>
-    <h1>Escolha uma categoria</h1>
-  </div>
+<div class="game-categories-page">
+  <section class="game-page-heading" aria-labelledby="categories-title">
+    <span class="game-kicker"><span aria-hidden="true">✦</span> Sua próxima descoberta</span>
+    <h1 id="categories-title">Qual tema vamos explorar?</h1>
+    <p>Escolha uma categoria, responda no seu ritmo e some pontos a cada acerto.</p>
+  </section>
 
   {% if categorias %}
-    <div class="row g-3">
+    <section class="game-category-grid" aria-label="Categorias disponíveis">
       {% for categoria in categorias %}
-        <div class="col-md-6 col-lg-4">
-          <article class="card h-100 p-3">
-            <h2 class="h4">{{ categoria.nome }}</h2>
-            <p class="text-secondary">{{ categoria.descricao }}</p>
-            <p class="small text-secondary mt-auto">{{ categoria.perguntas|length }} perguntas</p>
+        <article class="game-category-card">
+          <div class="game-category-card-top">
+            <span class="game-category-icon" aria-hidden="true">
+              {% if loop.index % 3 == 1 %}⌂{% elif loop.index % 3 == 2 %}✺{% else %}◇{% endif %}
+            </span>
+            <span class="game-question-count">
+              {{ categoria.perguntas|length }} {{ 'questão' if categoria.perguntas|length == 1 else 'questões' }}
+            </span>
+          </div>
+          <h2>{{ categoria.nome }}</h2>
+          <p class="game-category-description">{{ categoria.descricao }}</p>
+          <div class="game-category-actions">
             {% if categoria.perguntas %}
-              <a href="{{ url_for('quiz', categoria=categoria.id) }}" class="btn btn-primary">Começar</a>
+              <a href="{{ url_for('quiz', categoria=categoria.id) }}" class="game-start-button">
+                Jogar esta categoria <span aria-hidden="true">→</span>
+              </a>
             {% else %}
-              <button class="btn btn-secondary" type="button" disabled>Sem perguntas</button>
+              <span class="game-empty-button">Em breve</span>
             {% endif %}
-            <a class="btn btn-outline-secondary mt-2" href="{{ url_for('ranking', categoria=categoria.id) }}">Ranking da categoria</a>
-          </article>
-        </div>
+            <a class="game-ranking-link" href="{{ url_for('ranking', categoria=categoria.id) }}">Ver ranking da categoria</a>
+          </div>
+        </article>
       {% endfor %}
-    </div>
+    </section>
   {% else %}
-    <p class="text-secondary">Ainda não há categorias disponíveis.</p>
+    <div class="game-empty-state">
+      <span class="game-category-icon" aria-hidden="true">✦</span>
+      <h2>Novos desafios estão a caminho</h2>
+      <p>Ainda não há categorias disponíveis. Volte em breve para jogar.</p>
+    </div>
   {% endif %}
-</section>
+</div>
 {% endblock %}

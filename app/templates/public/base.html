@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>{% block title %}Conheça Pureza{% endblock %}</title>
+  <title>{% block title %}Purezando Quizz{% endblock %}</title>
 
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
@@ -16,29 +16,36 @@
 </head>
 <body class="{% block body_class %}{% endblock %}">
   {% if session.get('tipo_usuario') != 'admin' %}
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <nav class="navbar navbar-expand-lg navbar-dark app-navbar">
     <div class="container">
-      <a class="navbar-brand" href="{{ url_for('inicio') }}">
-        Conheça Pureza
+      <a class="navbar-brand d-inline-flex align-items-center gap-2" href="{{ url_for('inicio') }}">
+        <img src="{{ url_for('static', filename='public/assets/img/purezando.png') }}" alt="" width="42" height="32">
+        <span>Purezando Quizz</span>
       </a>
-
-      <div>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#publicNavigation" aria-controls="publicNavigation" aria-expanded="false" aria-label="Abrir ou fechar navegação">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="publicNavigation">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('inicio') }}">Início</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('sobre') }}">Sobre o projeto</a></li>
         {% if session.get('tipo_usuario') == 'admin' %}
-          <a class="text-white me-3" href="{{ url_for('admin') }}">Painel admin</a>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('admin') }}">Painel admin</a></li>
         {% elif session.get('tipo_usuario') == 'jogador' %}
-          <a class="text-white me-3" href="{{ url_for('categorias') }}">Quiz</a>
-          <a class="text-white me-3" href="{{ url_for('historico') }}">Histórico</a>
-          <a class="text-white me-3" href="{{ url_for('ranking') }}">Ranking</a>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('categorias') }}">Quiz</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('historico') }}">Histórico</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('ranking') }}">Ranking</a></li>
         {% else %}
-          <a class="text-white me-3" href="{{ url_for('login') }}">Entrar</a>
-          <a class="text-white" href="{{ url_for('admin_login') }}">Admin</a>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Entrar</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_login') }}">Admin</a></li>
         {% endif %}
         {% if session.get('usuario_id') %}
-          <span class="text-white me-2">{{ session.get('nome_usuario') }}</span>
-          <form class="d-inline" action="{{ url_for('logout') }}" method="post">
-            <button class="btn btn-sm btn-outline-light" type="submit">Sair</button>
-          </form>
+          <li class="nav-item"><span class="navbar-text px-lg-2">{{ session.get('nome_usuario') }}</span></li>
+          <li class="nav-item"><form action="{{ url_for('logout') }}" method="post">
+            <button class="btn btn-sm btn-outline-light app-nav-logout" type="submit">Sair</button>
+          </form></li>
         {% endif %}
+        </ul>
       </div>
     </div>
   </nav>
@@ -63,7 +70,7 @@
 
   {% if session.get('tipo_usuario') != 'admin' %}
     <footer class="bg-dark text-white text-center py-3 mt-5">
-      Quiz Educativo sobre Pureza/RN
+      Purezando Quizz · Quiz educativo sobre Pureza/RN
     </footer>
   {% endif %}
 

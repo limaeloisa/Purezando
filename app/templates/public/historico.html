@@ -1,6 +1,6 @@
 {% extends "public/base.html" %}
 
-{% block title %}Meu histórico | Conheça Pureza{% endblock %}
+{% block title %}Meu histórico | Purezando Quizz{% endblock %}
 
 {% block css %}
 	<link rel="stylesheet" href="{{ url_for('static', filename='public/css/records.css') }}">
@@ -33,14 +33,16 @@
 				</div>
 				<div class="table-responsive">
 					<table class="table records-table history-table align-middle">
-						<thead><tr><th scope="col">Data</th><th scope="col">Categoria</th><th scope="col">Acertos</th><th scope="col">Aproveitamento</th></tr></thead>
+						<thead><tr><th scope="col">Data</th><th scope="col">Categoria</th><th scope="col">Acertos</th><th scope="col">Pontos</th><th scope="col">Média por questão</th><th scope="col">Aproveitamento</th></tr></thead>
 						<tbody>
 							{% for partida in partidas %}
-								{% set percentual = ((partida.pontuacao / partida.total_perguntas) * 100)|round|int if partida.total_perguntas > 0 else 0 %}
+								{% set percentual = ((partida.pontuacao / partida.pontuacao_maxima) * 100)|round|int if partida.pontuacao_maxima > 0 else 0 %}
 								<tr>
 									<td>{{ partida.criado_em.strftime('%d/%m/%Y %H:%M') }}</td>
 									<td class="records-player">{{ partida.categoria }}</td>
-									<td>{{ partida.pontuacao }} / {{ partida.total_perguntas }}</td>
+									<td>{{ partida.acertos }} / {{ partida.total_perguntas }}</td>
+									<td>{{ partida.pontuacao }} / {{ partida.pontuacao_maxima }} pts</td>
+									<td>{{ (partida.pontuacao / partida.total_perguntas)|round|int if partida.total_perguntas > 0 else 0 }} pts</td>
 									<td><span class="records-percentage">{{ percentual }}%</span></td>
 								</tr>
 							{% endfor %}

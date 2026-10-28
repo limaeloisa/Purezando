@@ -5,6 +5,7 @@ import click
 from dotenv import load_dotenv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import inspect, text
 from sqlalchemy.engine import URL
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -67,12 +68,94 @@ db = SQLAlchemy(app)
 import routes
 
 
+def migrate_database_schema():
+	from app.models.categoria import Categoria
+	from app.models.pergunta import Pergunta
+	from app.models.resultado_quiz import ResultadoQuiz
+
+	db.create_all()
+	columnas_pergunta = {
+		columna["name"]
+		for columna in inspect(db.engine).get_columns(Pergunta.__tablename__)
+	}
+	if "pontos" not in columnas_pergunta:
+		with db.engine.begin() as conexao:
+			conexao.execute(text(
+				"ALTER TABLE perguntas ADD COLUMN pontos "
+				"INTEGER NOT NULL DEFAULT 100"
+			))
+	if "dificuldade" not in columnas_pergunta:
+		with db.engine.begin() as conexao:
+			conexao.execute(text(
+				"ALTER TABLE perguntas ADD COLUMN dificuldade "
+				"VARCHAR(20) NOT NULL DEFAULT 'muito_facil'"
+			))
+		with db.engine.begin() as conexao:
+			conexao.execute(text(
+				"UPDATE perguntas SET dificuldade = CASE "
+				"WHEN pontos <= 100 THEN 'muito_facil' "
+				"WHEN pontos <= 200 THEN 'facil' "
+				"WHEN pontos <= 300 THEN 'media' "
+				"WHEN pontos <= 400 THEN 'dificil' "
+				"WHEN pontos <= 500 THEN 'muito_dificil' "
+				"WHEN pontos <= 600 THEN 'desafio' "
+				"WHEN pontos <= 700 THEN 'especial' "
+				"WHEN pontos <= 800 THEN 'avancado' "
+				"WHEN pontos <= 900 THEN 'especialista' "
+				"WHEN pontos <= 1000 THEN 'mestre' "
+				"WHEN pontos <= 1100 THEN 'lendario' "
+				"ELSE 'supremo' END"
+			))
+	with db.engine.begin() as conexao:
+		conexao.execute(text(
+			"UPDATE perguntas SET pontos = CASE dificuldade "
+			"WHEN 'muito_facil' THEN 100 "
+			"WHEN 'facil' THEN 200 "
+			"WHEN 'media' THEN 300 "
+			"WHEN 'dificil' THEN 400 "
+			"WHEN 'muito_dificil' THEN 500 "
+			"WHEN 'desafio' THEN 600 "
+			"WHEN 'especial' THEN 700 "
+			"WHEN 'avancado' THEN 800 "
+			"WHEN 'especialista' THEN 900 "
+			"WHEN 'mestre' THEN 1000 "
+			"WHEN 'lendario' THEN 1100 "
+			"WHEN 'supremo' THEN 1200 "
+			"ELSE pontos END"
+		))
+
+	columnas_resultado = {
+		columna["name"]
+		for columna in inspect(db.engine).get_columns(ResultadoQuiz.__tablename__)
+	}
+	with db.engine.begin() as conexao:
+		if "pontuacao_maxima" not in columnas_resultado:
+			conexao.execute(text(
+				"ALTER TABLE resultado_quiz ADD COLUMN pontuacao_maxima "
+				"INTEGER NOT NULL DEFAULT 0"
+			))
+		if "acertos" not in columnas_resultado:
+			conexao.execute(text(
+				"ALTER TABLE resultado_quiz ADD COLUMN acertos "
+				"INTEGER NOT NULL DEFAULT 0"
+			))
+		conexao.execute(text(
+			"UPDATE resultado_quiz "
+			"SET pontuacao_maxima = total_perguntas "
+			"WHERE pontuacao_maxima = 0"
+		))
+		conexao.execute(text(
+			"UPDATE resultado_quiz SET acertos = pontuacao WHERE acertos = 0"
+		))
+
+
 @app.cli.command("init-db")
 def initialize_database():
 	from app.models.categoria import Categoria
 	from app.models.pergunta import Pergunta
 
-	db.create_all()
+	migrate_database_schema()
+
 	conteudo_inicial = [
 		(
 			"História",

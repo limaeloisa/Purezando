@@ -1,36 +1,44 @@
 * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
 }
 
 body {
-    min-height: 100vh;
-    font-family: Arial, sans-serif;
-    background-color: #dceeff;
     display: flex;
-    justify-content: center;
+    min-height: 100vh;
     align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 32px 16px;
+    color: #172b4d;
+    background:
+        radial-gradient(ellipse at 50% 0, rgba(60, 113, 226, 0.13), transparent 55%),
+        #f2f6fc;
+    font-family: "Segoe UI", Arial, sans-serif;
 }
 
 .login-container {
-    width: min(400px, calc(100vw - 32px));
-    background-color: white;
-    padding: 35px;
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+    width: min(100%, 440px);
+    padding: clamp(28px, 6vw, 44px);
+    border: 1px solid #dce5f2;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 18px 48px rgba(24, 55, 105, 0.11);
 }
 
 .login-container h1 {
+    margin: 0 0 10px;
+    color: #173d7a;
+    font-size: clamp(1.7rem, 5vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.035em;
     text-align: center;
-    color: #1769aa;
-    margin-bottom: 10px;
 }
 
-.login-container p {
+.login-container > p:not(.form-error) {
+    margin: 0 0 28px;
+    color: #64748b;
+    line-height: 1.55;
     text-align: center;
-    color: #666;
-    margin-bottom: 25px;
 }
 
 .login-container form {
@@ -39,63 +47,110 @@ body {
 }
 
 .login-container label {
-    margin-bottom: 6px;
-    color: #333;
-    font-weight: bold;
+    margin-bottom: 7px;
+    color: #344967;
+    font-size: 0.9rem;
+    font-weight: 600;
 }
 
 .login-container input {
     width: 100%;
-    padding: 12px;
+    min-height: 48px;
     margin-bottom: 18px;
-    border: 1px solid #b8d8f5;
+    padding: 11px 13px;
+    border: 1px solid #cbd7e8;
     border-radius: 8px;
-    font-size: 15px;
+    color: #172b4d;
+    background: #fff;
+    font: inherit;
     outline: none;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.login-container input::placeholder {
+    color: #94a3b8;
 }
 
 .login-container input:focus {
-    border-color: #1769aa;
+    border-color: #315ce5;
+    box-shadow: 0 0 0 3px rgba(49, 92, 229, 0.15);
+}
+
+.login-container button,
+.botao-cadastro {
+    display: flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #244fcf;
+    border-radius: 8px;
+    color: #fff;
+    background: #315ce5;
+    font: inherit;
+    font-size: 0.98rem;
+    font-weight: 650;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 4px 0 #173d7a, 0 8px 18px rgba(49, 92, 229, 0.18);
+    transition: background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
 }
 
 .login-container button {
-    padding: 12px;
-    background-color: #1769aa;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
     cursor: pointer;
 }
 
-.login-container button:hover {
-    background-color: #125589;
+.login-container button:hover,
+.botao-cadastro:hover {
+    border-color: #1e43b5;
+    color: #fff;
+    background: #244fcf;
+    box-shadow: 0 2px 0 #173d7a, 0 10px 20px rgba(49, 92, 229, 0.22);
+    transform: translateY(2px);
+}
+
+.login-container button:focus-visible,
+.botao-cadastro:focus-visible,
+.admin-link:focus-visible {
+    outline: 3px solid rgba(49, 92, 229, 0.35);
+    outline-offset: 3px;
 }
 
 .cadastro-text {
-    margin-top: 20px;
-    margin-bottom: 10px !important;
+    margin: 24px 0 12px !important;
 }
 
 .botao-cadastro {
+    width: 100%;
+}
+
+.admin-link {
     display: block;
+    margin-top: 20px;
+    color: #3156a8;
+    font-size: 0.9rem;
     text-align: center;
-    padding: 12px;
-    background-color: #1769aa;
-    color: white;
     text-decoration: none;
+}
+
+.admin-link:hover {
+    color: #173d7a;
+    text-decoration: underline;
+}
+
+.form-error {
+    margin: 0 0 18px;
+    border: 1px solid #f1c7ce;
     border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
+    padding: 11px 13px;
+    color: #9c2738;
+    background: #fff2f3;
+    line-height: 1.45;
 }
 
-.botao-cadastro:hover {
-    background-color: #125589;
-}
-
-@media (max-width: 480px) {
-    .login-container {
-        padding: 26px 22px;
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
     }
 }
