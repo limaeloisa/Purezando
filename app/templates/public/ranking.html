@@ -34,14 +34,29 @@
 		</form>
 
 		{% if resultado_recente %}
-			<div class="alert alert-success records-notice" role="status">
-				{% set pontos_possiveis = resultado_recente.get('pontuacao_maxima', resultado_recente.total) %}
-				{% set acertos_recentes = resultado_recente.get('acertos', resultado_recente.pontuacao) %}
-				{% set acerto_label = 'acerto' if acertos_recentes == 1 else 'acertos' %}
-				{% set pergunta_label = 'pergunta' if resultado_recente.total == 1 else 'perguntas' %}
-				<span>Você fez <strong>{{ resultado_recente.pontuacao }} de {{ pontos_possiveis }} pontos</strong>, com {{ acertos_recentes }} {{ acerto_label }} em {{ resultado_recente.total }} {{ pergunta_label }}, em {{ resultado_recente.categoria }}.</span>
-				<a class="alert-link" href="{{ url_for('resultado') }}">Ver resultado da partida</a>
-			</div>
+			{% set pontos_possiveis = resultado_recente.get('pontuacao_maxima', resultado_recente.total) %}
+			{% set acertos_recentes = resultado_recente.get('acertos', resultado_recente.pontuacao) %}
+			{% set aproveitamento_recente = ((resultado_recente.pontuacao / pontos_possiveis) * 100)|round|int if pontos_possiveis > 0 else 0 %}
+			<section class="records-card ranking-latest-result" aria-labelledby="latest-result-heading" aria-live="polite">
+				<div class="ranking-latest-result-heading">
+					<div>
+						<p class="records-kicker">RESULTADO DA PARTIDA</p>
+						<h2 id="latest-result-heading">{{ resultado_recente.categoria }}</h2>
+					</div>
+					{% if partida_no_ranking %}
+						<div class="ranking-latest-position">
+							<span>Sua posição</span>
+							<strong>#{{ partida_no_ranking.posicao }}</strong>
+						</div>
+					{% endif %}
+				</div>
+				<div class="ranking-result-stats">
+					<div><strong>{{ resultado_recente.pontuacao }}<small> / {{ pontos_possiveis }} pts</small></strong><span>Pontuação</span></div>
+					<div><strong>{{ acertos_recentes }}<small> / {{ resultado_recente.total }}</small></strong><span>Acertos</span></div>
+					<div><strong>{{ aproveitamento_recente }}<small>%</small></strong><span>Aproveitamento</span></div>
+				</div>
+				<a class="ranking-result-link" href="{{ url_for('resultado') }}">Ver resultado completo <span aria-hidden="true">→</span></a>
+			</section>
 		{% endif %}
 
 		{% if erro %}

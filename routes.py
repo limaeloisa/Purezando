@@ -10,6 +10,7 @@ from flask import (
     session,
     url_for
 )
+from sqlalchemy import and_, or_
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import selectinload
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -336,7 +337,8 @@ def quiz():
             "pontuacao_maxima": pontuacao_maxima,
             "acertos": acertos,
             "total": len(perguntas),
-            "persistido": persistido
+            "persistido": persistido,
+            "resultado_id": resultado.id if persistido else None
         }
         return redirect(url_for("ranking", categoria=categoria.id))
 
@@ -738,6 +740,7 @@ def ranking():
         or resultado_recente.get("categoria_id") != categoria_id
     ):
         resultado_recente = None
+    partida_no_ranking = None
 
     try:
         categorias = Categoria.query.order_by(Categoria.nome.asc()).all()
@@ -753,6 +756,59 @@ def ranking():
             consulta = consulta.filter(
                 ResultadoQuiz.categoria == categoria_selecionada.nome
             )
+        if resultado_recente and resultado_recente.get("resultado_id"):
+            partida_recente = (
+                ResultadoQuiz.query
+                .filter_by(
+                    id=resultado_recente["resultado_id"],
+                    usuario_id=session["usuario_id"]
+                )
+                .first()
+            )
+            if (
+                partida_recente
+                and partida_recente.total_perguntas > 0
+                and partida_recente.pontuacao_maxima > 0
+                and (
+                    categoria_selecionada is None
+                    or partida_recente.categoria == categoria_selecionada.nome
+                )
+            ):
+                aproveitamento_partida = (
+                    partida_recente.pontuacao * 1.0
+                    / partida_recente.pontuacao_maxima
+                )
+                aproveitamento_resultados = (
+                    ResultadoQuiz.pontuacao * 1.0
+                    / ResultadoQuiz.pontuacao_maxima
+                )
+                partidas_a_frente = (
+                    consulta
+                    .filter(ResultadoQuiz.pontuacao_maxima > 0)
+                    .filter(or_(
+                        aproveitamento_resultados > aproveitamento_partida,
+                        and_(
+                            aproveitamento_resultados == aproveitamento_partida,
+                            ResultadoQuiz.pontuacao > partida_recente.pontuacao
+                        ),
+                        and_(
+                            aproveitamento_resultados == aproveitamento_partida,
+                            ResultadoQuiz.pontuacao == partida_recente.pontuacao,
+                            ResultadoQuiz.criado_em < partida_recente.criado_em
+                        ),
+                        and_(
+                            aproveitamento_resultados == aproveitamento_partida,
+                            ResultadoQuiz.pontuacao == partida_recente.pontuacao,
+                            ResultadoQuiz.criado_em == partida_recente.criado_em,
+                            ResultadoQuiz.id < partida_recente.id
+                        )
+                    ))
+                    .count()
+                )
+                partida_no_ranking = {
+                    "posicao": partidas_a_frente + 1,
+                    "resultado": partida_recente
+                }
         aproveitamento = (
             ResultadoQuiz.pontuacao * 1.0 / ResultadoQuiz.pontuacao_maxima
         )
@@ -762,7 +818,8 @@ def ranking():
             .order_by(
                 aproveitamento.desc(),
                 ResultadoQuiz.pontuacao.desc(),
-                ResultadoQuiz.criado_em.asc()
+                ResultadoQuiz.criado_em.asc(),
+                ResultadoQuiz.id.asc()
             )
             .limit(10)
             .all()
@@ -771,6 +828,7 @@ def ranking():
     except SQLAlchemyError:
         app.logger.exception("Erro ao carregar ranking")
         resultados = []
+        partida_no_ranking = None
         erro = "O ranking estará disponível quando o banco estiver conectado."
     return render_template(
         "public/ranking.html",
@@ -778,6 +836,7 @@ def ranking():
         categorias=categorias,
         categoria_selecionada=categoria_selecionada,
         resultado_recente=resultado_recente,
+        partida_no_ranking=partida_no_ranking,
         erro=erro
     )
 

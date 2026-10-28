@@ -104,6 +104,103 @@
   padding: clamp(1.1rem, 3vw, 1.75rem);
 }
 
+.ranking-latest-result {
+  border-color: #b6d6f1;
+  background: linear-gradient(120deg, #fff, #edf6ff);
+}
+
+.ranking-latest-result-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ranking-latest-result-heading h2 {
+  margin: 0;
+  color: #0d3f70;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.ranking-latest-position {
+  display: grid;
+  min-width: 5.25rem;
+  min-height: 4.25rem;
+  align-content: center;
+  justify-items: center;
+  border: 1px solid #c9e0f4;
+  border-radius: 14px;
+  color: #125589;
+  background: #fff;
+  box-shadow: 0 5px 14px rgba(18, 85, 137, 0.1);
+}
+
+.ranking-latest-position span {
+  color: #58758d;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.ranking-latest-position strong {
+  font-size: 1.25rem;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+.ranking-result-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.ranking-result-stats > div {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.9rem;
+  border: 1px solid #dceaf7;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.ranking-result-stats strong {
+  color: #174f91;
+  font-size: 1.25rem;
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
+}
+
+.ranking-result-stats strong small {
+  color: #58758d;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.ranking-result-stats span {
+  color: #58758d;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.ranking-result-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  color: #125589;
+  font-size: 0.88rem;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.ranking-result-link:hover,
+.ranking-result-link:focus-visible {
+  color: #0d3f70;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
 .records-card-heading {
   display: flex;
   align-items: center;
@@ -299,6 +396,15 @@
 
   .records-card-heading h2 {
     font-size: 1.1rem;
+  }
+
+  .ranking-result-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .ranking-result-stats > div {
+    grid-template-columns: 1fr auto;
+    align-items: center;
   }
 }
 
