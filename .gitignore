@@ -16,10 +16,13 @@ admin-credentials.local.txt
 # Flask
 instance/
 
-# Banco SQLite local, caso exista durante testes
+# Banco de dados local
 *.sqlite
 *.sqlite3
 *.db
+
+# Backups e dumps do banco
+*.sql
 
 # Testes e logs
 .pytest_cache/
