@@ -13,7 +13,7 @@ __pycache__/
 .env.*
 config.env
 admin-credentials.local.txt
-
+admin-credentials.txt
 # Flask e banco de dados local
 instance/
 *.sqlite
