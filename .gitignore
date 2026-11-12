@@ -1,4 +1,5 @@
-# Ambiente virtual
+
+# Ambientes virtuais
 venv/
 .venv/
 env/
@@ -7,21 +8,19 @@ env/
 __pycache__/
 *.py[cod]
 
-# Credenciais
+# Credenciais e configurações locais
 .env
 .env.*
 config.env
 admin-credentials.local.txt
 
-# Flask
+# Flask e banco de dados local
 instance/
-
-# Banco de dados local
 *.sqlite
 *.sqlite3
 *.db
 
-# Backups e dumps do banco
+# Backups e dumps
 *.sql
 
 # Testes e logs
