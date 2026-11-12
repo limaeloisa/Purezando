@@ -12,10 +12,14 @@ from sqlalchemy.engine import URL
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 load_dotenv(PROJECT_ROOT / "config.env")
 
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
+
 app = Flask(
-	__name__,
-	template_folder="templates",
-	static_folder="static"
+    __name__,
+    template_folder=str(BASE_DIR / "templates"),
+    static_folder=str(BASE_DIR / "static")
 )
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY") or os.urandom(32)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
