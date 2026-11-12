@@ -16,6 +16,10 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
 
+print("BASE_DIR:", BASE_DIR)
+print("TEMPLATES EXISTE:", (BASE_DIR / "templates").exists())
+print("INDEX EXISTE:", (BASE_DIR / "templates" / "public" / "index.html").exists())
+
 app = Flask(
     __name__,
     template_folder=str(BASE_DIR / "templates"),
