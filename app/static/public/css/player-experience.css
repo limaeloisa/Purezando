@@ -1,0 +1,39 @@
+body.player-app-shell {
+  background-color: #0b3474;
+  background-image: url("../assets/img/quiz-pattern.svg");
+  background-repeat: repeat;
+  background-size: 520px 320px;
+  background-attachment: fixed;
+}
+
+body.player-app-shell .game-categories-page,
+body.player-app-shell .records-page,
+body.player-app-shell .quiz-page {
+  background: transparent;
+}
+
+body.player-app-shell .game-page-heading h1,
+body.player-app-shell .quiz-heading h1,
+body.player-app-shell .records-heading h1 {
+  color: #fff;
+}
+
+body.player-app-shell .game-page-heading > p:last-child,
+body.player-app-shell .quiz-heading > p:last-child,
+body.player-app-shell .records-heading > div > p:last-child {
+  color: #d3e6ff;
+}
+
+body.player-app-shell .game-kicker,
+body.player-app-shell .records-heading .records-kicker {
+  color: #a8d7ff;
+}
+
+body.player-app-shell .quiz-eyebrow {
+  color: #173d7a;
+}
+
+body.player-app-shell .quiz-progress-meta {
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(4, 25, 61, 0.4);
+}

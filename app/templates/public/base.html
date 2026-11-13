@@ -13,8 +13,11 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='public/css/brand.css') }}">
 
   {% block css %}{% endblock %}
+  {% if session.get('tipo_usuario') == 'jogador' %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='public/css/player-experience.css') }}">
+  {% endif %}
 </head>
-<body class="{% block body_class %}{% endblock %}">
+<body class="{% block body_class %}{% endblock %}{% if session.get('tipo_usuario') == 'jogador' %} player-app-shell{% endif %}">
   {% if session.get('tipo_usuario') != 'admin' %}
   <nav class="navbar navbar-expand-lg navbar-dark app-navbar">
     <div class="container">

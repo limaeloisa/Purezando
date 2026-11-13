@@ -12,8 +12,11 @@
   min-height: calc(100vh - 150px);
   padding: 32px 20px 64px;
   color: var(--quiz-ink);
-  background-color: var(--quiz-paper);
-  background-image: repeating-linear-gradient(135deg, transparent 0 34px, rgba(23, 107, 88, 0.035) 34px 35px);
+  background:
+    radial-gradient(circle at top left, rgba(49, 92, 229, 0.12), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(32, 112, 160, 0.09), transparent 30%),
+    var(--quiz-paper);
+  background-image: repeating-linear-gradient(135deg, transparent 0 34px, rgba(23, 107, 88, 0.035) 34px 35px), radial-gradient(circle at top left, rgba(49, 92, 229, 0.12), transparent 28%), radial-gradient(circle at bottom right, rgba(32, 112, 160, 0.09), transparent 30%);
   font-family: "DM Sans", sans-serif;
 }
 
@@ -94,16 +97,31 @@
   padding: 28px;
   border: 1px solid rgba(24, 59, 53, 0.14);
   border-top: 5px solid var(--quiz-green);
-  border-radius: 6px;
-  background: #fff;
-  box-shadow: 0 18px 50px rgba(24, 59, 53, 0.08);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(246,250,255,0.96));
+  box-shadow: 0 18px 50px rgba(24, 59, 53, 0.08), 0 1px 0 rgba(255,255,255,0.5) inset;
 }
 
 .question-block {
+  position: relative;
   min-width: 0;
   margin: 0;
   padding: 0 0 28px;
   border: 0;
+  animation: question-rise 260ms ease-out both;
+}
+
+.question-block::before {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(49, 92, 229, 0.8), rgba(45, 135, 197, 0.8));
+  content: "";
+  opacity: 0;
+  transform: scaleX(0.4);
+  transform-origin: left;
 }
 
 .question-block + .question-block {
@@ -144,25 +162,30 @@
 }
 
 .answer-option {
+  position: relative;
   display: flex;
   min-height: 62px;
   align-items: center;
   gap: 12px;
   padding: 10px 14px;
   border: 2px solid transparent;
-  border-radius: 4px;
+  border-radius: 14px;
   color: #fff;
   cursor: pointer;
-  transition: transform 140ms ease, border-color 140ms ease;
+  box-shadow: 0 8px 18px rgba(36, 70, 83, 0.08);
+  transition: transform 140ms ease, border-color 140ms ease, box-shadow 180ms ease, background 180ms ease;
 }
 
 .answer-option:hover {
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 12px 24px rgba(36, 70, 83, 0.12);
 }
 
 .answer-option:has(input:checked) {
   border-color: var(--quiz-ink);
-  box-shadow: 0 0 0 2px #fff inset;
+  background: linear-gradient(135deg, #edf4ff, #dfeeff);
+  box-shadow: 0 0 0 2px rgba(49, 92, 229, 0.12), 0 12px 24px rgba(49, 92, 229, 0.12);
+  animation: option-select 220ms ease;
 }
 
 .answer-option:has(input:focus-visible) {
@@ -187,8 +210,10 @@
   height: 30px;
   place-items: center;
   border: 1px solid rgba(255, 255, 255, 0.75);
-  border-radius: 3px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.22);
   font-weight: 700;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
 }
 
 .answer-text {
@@ -237,6 +262,28 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes question-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes option-select {
+  0% { transform: scale(0.98); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+@keyframes progress-pulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(49, 92, 229, 0.22); }
+  50% { box-shadow: 0 0 22px rgba(49, 92, 229, 0.38); }
+}
+
 @media (max-width: 640px) {
   .quiz-heading h1 {
     font-size: 1.75rem;
@@ -280,7 +327,8 @@
     animation: none;
   }
 
-  .answer-option {
+  .answer-option,
+  .quiz-controls button {
     transition: none;
   }
 }
@@ -310,8 +358,10 @@
   width: 0;
   height: 100%;
   border-radius: inherit;
-  background: var(--quiz-green);
+  background: linear-gradient(90deg, #2d87c5, #315ce5);
+  box-shadow: 0 0 18px rgba(49, 92, 229, 0.3);
   transition: width 220ms ease;
+  animation: progress-pulse 2.2s ease-in-out infinite;
 }
 
 .question-block[hidden] {
@@ -346,9 +396,10 @@
   min-height: 48px;
   padding: 0 20px;
   border: 1px solid var(--quiz-green);
-  border-radius: 4px;
+  border-radius: 12px;
   font: inherit;
   font-weight: 700;
+  transition: transform 170ms ease, box-shadow 170ms ease, background 170ms ease;
 }
 
 .quiz-previous {
