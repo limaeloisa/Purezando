@@ -1,2 +1,14 @@
-[tool.vercel]
-entrypoint = "app:app"
+[project]
+name = "purezando"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "flask",
+    "flask-sqlalchemy",
+    "sqlalchemy",
+    "python-dotenv",
+    "click",
+    "pymysql",
+    "cryptography",
+    "werkzeug",
+]
