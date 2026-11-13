@@ -5,6 +5,9 @@ requires-python = ">=3.12"
 dependencies = [
     "flask",
     "flask-sqlalchemy",
+    "flask-wtf",
+    "wtforms",
+    "email-validator",
     "sqlalchemy",
     "python-dotenv",
     "click",
