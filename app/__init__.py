@@ -12,8 +12,6 @@ from sqlalchemy.engine import URL
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 load_dotenv(PROJECT_ROOT / "config.env")
 
-from pathlib import Path
-
 BASE_DIR = Path(__file__).resolve().parent
 
 app = Flask(
@@ -70,7 +68,10 @@ app.config["SQLALCHEMY_DATABASE_URI"] = url_banco
 
 db = SQLAlchemy(app)
 
-import routes
+try:
+    import routes  # noqa: F401
+except ImportError:  # pragma: no cover
+    from . import routes  # noqa: F401
 
 
 def migrate_database_schema():
