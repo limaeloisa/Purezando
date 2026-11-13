@@ -9,8 +9,8 @@
 
   <link
     rel="icon"
-    type="image/x-icon"
-    href="{{ url_for('static', filename='public/assets/favicon.ico') }}"
+    type="image/png"
+    href="{{ url_for('static', filename='public/assets/img/purezando.png') }}"
   >
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
@@ -28,7 +28,7 @@
     <nav class="navbar navbar-expand-md navbar-dark fixed-top home-navbar">
       <div class="container">
         <a class="navbar-brand home-brand" href="{{ url_for('inicio') }}">
-          <img src="{{ url_for('static', filename='public/assets/img/purezando.png') }}" alt="">
+          <img src="{{ url_for('static', filename='public/assets/img/purezando.png') }}" alt="Logo Purezando">
           <span>Purezando Quizz</span>
         </a>
         <button
@@ -93,16 +93,24 @@
       <div class="carousel-inner">
         <div class="carousel-item active home-slide home-slide-play">
           <div class="carousel-caption text-start">
-            <p class="home-eyebrow">Um quiz sobre Pureza/RN</p>
-            <h1>Conheça Pureza de um novo jeito</h1>
-            <p>Explore a história, a cultura e as curiosidades do município em um quiz educativo.</p>
+            <p class="home-eyebrow">Para moradores e visitantes</p>
+            <h1>Descubra Pureza como quem vive e como quem visita</h1>
+            <p>Explore a história, a cultura e os pontos mais especiais do município em uma experiência divertida, educativa e cheia de identidade local.</p>
             <p>
               <a class="btn btn-lg btn-primary" href="{{ url_for('categorias') if session.get('tipo_usuario') == 'jogador' else url_for('cadastro') }}">
-                {{ 'Jogar agora' if session.get('tipo_usuario') == 'jogador' else 'Começar' }}
+                {{ 'Jogar agora' if session.get('tipo_usuario') == 'jogador' else 'Começar a explorar' }}
                 <span aria-hidden="true"> →</span>
               </a>
             </p>
           </div>
+          <div class="home-hero-mark" aria-label="Logo Purezando">
+            <div class="home-mark-badge">
+              <span class="home-mark-tag">LEVEL 01</span>
+              <img src="{{ url_for('static', filename='public/assets/img/purezando.png') }}" alt="Logo Purezando">
+              <span class="home-mark-score">+120 XP</span>
+            </div>
+          </div>
+
           <div class="quiz-preview" aria-label="Exemplo de pergunta do quiz">
             <div class="quiz-preview-top">
               <span class="quiz-pill">PERGUNTA 01</span>
@@ -224,9 +232,9 @@
         </div>
         <div class="home-project-copy">
           <span class="section-kicker">Por trás do quiz</span>
-          <h2 id="projectTitle">Conheça o projeto e quem faz acontecer</h2>
-          <p>O Purezando Quizz aproxima moradores e visitantes da história, da cultura e da geografia do município por meio de perguntas, descobertas e desafios.</p>
-          <p>O app foi criado para ser apresentado em feiras e ajudar a tornar a história, a cultura e os conhecimentos sobre Pureza mais conhecidos.</p>
+          <h2 id="projectTitle">Uma experiência acolhedora para quem vive em Pureza e para quem chega aqui</h2>
+          <p>O Purezando Quizz aproxima moradores e visitantes da história, da cultura e da geografia do município por meio de perguntas, descobertas e desafios que convidam a conhecer mais sobre a cidade.</p>
+          <p>O app foi pensado para ser uma porta de entrada amigável para fazer a comunidade se reconhecer e para despertar a curiosidade de quem está conhecendo Pureza pela primeira vez.</p>
           <div class="project-developers" aria-label="Desenvolvedores do projeto">
             <article class="developer-card">
               <span class="project-team-mark" aria-hidden="true">EL</span>
@@ -251,8 +259,8 @@
         <div class="col-md-7">
           <span class="section-kicker">Conheça o município</span>
           <h2>História, cultura e <span class="text-muted">identidade local</span></h2>
-          <p class="lead">Pureza reúne histórias, tradições e lugares especiais. O quiz apresenta esses aspectos de forma acessível e ajuda você a conhecer melhor o município.</p>
-          <a class="btn btn-outline-primary" href="{{ url_for('sobre') }}">Conhecer o projeto <span aria-hidden="true">→</span></a>
+          <p class="lead">Pureza reúne histórias, tradições e lugares especiais. Aqui, moradores se reconhecem na memória da cidade e visitantes encontram uma forma leve e inspiradora de conhecer o município.</p>
+          <a class="btn btn-outline-primary" href="{{ url_for('sobre') }}">Conhecer a proposta <span aria-hidden="true">→</span></a>
         </div>
         <div class="col-md-5">
           <div class="fun-illustration illustration-map" aria-hidden="true">
@@ -284,11 +292,11 @@
       <hr class="home-divider">
 
       <section class="home-final-cta text-center">
-        <span class="section-kicker">Comece agora</span>
-        <h2>Amplie seu conhecimento sobre Pureza</h2>
-        <p>Crie sua conta e explore os temas disponíveis no quiz.</p>
+        <span class="section-kicker">Venha participar</span>
+        <h2>Conheça Pureza de um jeito divertido e acolhedor</h2>
+        <p>Seja você morador, visitante ou alguém que quer conhecer melhor a cidade, o quiz é uma ótima forma de aprender e se divertir.</p>
         <a class="btn btn-lg btn-primary" href="{{ url_for('categorias') if session.get('tipo_usuario') == 'jogador' else url_for('cadastro') }}">
-          {{ 'Começar a jogar' if session.get('tipo_usuario') == 'jogador' else 'Criar conta' }}
+          {{ 'Começar a jogar' if session.get('tipo_usuario') == 'jogador' else 'Criar conta e participar' }}
           <span aria-hidden="true"> →</span>
         </a>
       </section>

@@ -98,8 +98,8 @@ body > main {
 .app-navbar {
   position: relative;
   z-index: 20;
-  background: linear-gradient(110deg, #0d3f70, #1769aa 58%, #315ce5);
-  box-shadow: 0 8px 24px rgba(13, 63, 112, 0.16);
+  background: linear-gradient(110deg, #1f1a4e 0%, #4a38d8 34%, #2bb7d9 100%);
+  box-shadow: 0 8px 24px rgba(23, 17, 76, 0.22);
 }
 
 .app-navbar .navbar-brand {
@@ -109,8 +109,36 @@ body > main {
 }
 
 .app-navbar .navbar-brand img {
+  width: 42px;
+  height: 32px;
   object-fit: contain;
   filter: drop-shadow(0 2px 4px rgba(8, 34, 69, 0.2));
+}
+
+.navbar-brand.home-brand img,
+.home-project-logo img,
+.project-heading img,
+.home-feature-logo {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.navbar-brand.home-brand img {
+  width: 62px;
+  height: 42px;
+}
+
+.home-project-logo img,
+.project-heading img {
+  width: clamp(180px, 26vw, 260px);
+  margin-bottom: 0.8rem;
+}
+
+.home-feature-logo {
+  width: min(100%, 220px);
+  margin: 0 auto 0.75rem;
 }
 
 .app-navbar .navbar-toggler {
@@ -171,10 +199,10 @@ body > main {
 }
 
 .home-shell .features-icons-item {
-  border: 1px solid #c9e0f4;
-  border-radius: 16px;
-  background: var(--pureza-white);
-  box-shadow: 0 8px 24px rgba(18, 85, 137, 0.12);
+  border: 1px solid rgba(98, 93, 192, 0.14);
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff 0%, #f3f5ff 100%);
+  box-shadow: 0 12px 28px rgba(45, 45, 107, 0.12);
 }
 
 .home-shell .features-icons-item:hover {
