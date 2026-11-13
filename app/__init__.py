@@ -74,7 +74,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = url_banco
 
 db = SQLAlchemy(app)
 
-import routes
+from app import routes
 
 
 def migrate_database_schema():
