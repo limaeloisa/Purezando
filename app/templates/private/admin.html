@@ -17,6 +17,7 @@
       <a class="admin-nav-link" href="#usuarios"><i class="bi bi-people-fill" aria-hidden="true"></i>Usuários</a>
       <a class="admin-nav-link" href="#categorias"><i class="bi bi-collection-fill" aria-hidden="true"></i>Categorias</a>
       <a class="admin-nav-link" href="#perguntas"><i class="bi bi-patch-question-fill" aria-hidden="true"></i>Perguntas</a>
+      <a class="admin-nav-link" href="{{ url_for('categorias') }}"><i class="bi bi-play-circle-fill" aria-hidden="true"></i>Testar quiz</a>
     </nav>
     <div class="admin-sidebar-footer">
       <span class="admin-avatar">{{ session.get('nome_usuario', 'A')[:1]|upper }}</span>
@@ -151,7 +152,7 @@
       'supremo': 'Supremo'
     } %}
     <h2 class="h3" id="perguntas-heading">Perguntas <span class="text-secondary fs-6">{{ perguntas|length }}</span></h2>
-    <p class="text-secondary text-center">Escolha a dificuldade da questão para definir automaticamente de 100 a 1200 pontos. Somente respostas corretas somam pontos.</p>
+    <p class="text-secondary text-center">Cada pergunta fica vinculada somente à categoria selecionada e aparece apenas no quiz dela. Escolha a dificuldade para definir de 100 a 1200 pontos; somente respostas corretas somam pontos.</p>
     {% if categorias %}
       <form class="row g-3 my-3" action="{{ url_for('criar_pergunta') }}" method="post">
         <div class="col-lg-8"><label class="form-label" for="nova-pergunta">Enunciado</label><textarea class="form-control" id="nova-pergunta" name="enunciado" rows="2" required></textarea></div>
@@ -168,23 +169,34 @@
     {% endif %}
 
     <div class="mt-4">
-      {% for pergunta in perguntas %}
-        <details class="border-bottom py-3">
-          <summary class="fw-semibold">{{ pergunta.enunciado }} <span class="text-secondary">· {{ pergunta.categoria.nome }} · {{ rotulos_dificuldade.get(pergunta.dificuldade, 'Dificuldade não definida') }} · {{ pergunta.pontos }} pontos</span></summary>
-          <form class="row g-3 pt-3" action="{{ url_for('editar_pergunta', pergunta_id=pergunta.id) }}" method="post">
-            <div class="col-lg-8"><label class="form-label" for="enunciado-{{ pergunta.id }}">Enunciado</label><textarea class="form-control" id="enunciado-{{ pergunta.id }}" name="enunciado" rows="2" required>{{ pergunta.enunciado }}</textarea></div>
-            <div class="col-lg-4"><label class="form-label" for="categoria-{{ pergunta.id }}">Categoria</label><select class="form-select" id="categoria-{{ pergunta.id }}" name="categoria_id" required>{% for categoria in categorias %}<option value="{{ categoria.id }}" {% if categoria.id == pergunta.categoria_id %}selected{% endif %}>{{ categoria.nome }}</option>{% endfor %}</select></div>
-            {% for letra in ['a', 'b', 'c', 'd'] %}
-              <div class="col-md-6"><label class="form-label" for="opcao-{{ pergunta.id }}-{{ letra }}">Alternativa {{ letra|upper }}</label><input class="form-control" id="opcao-{{ pergunta.id }}-{{ letra }}" name="opcao_{{ letra }}" value="{{ pergunta.opcoes[loop.index0] }}" required maxlength="255"></div>
-            {% endfor %}
-            <div class="col-md-4"><label class="form-label" for="correta-{{ pergunta.id }}">Resposta correta</label><select class="form-select" id="correta-{{ pergunta.id }}" name="resposta_correta">{% for letra in ['A', 'B', 'C', 'D'] %}<option value="{{ letra }}" {% if pergunta.resposta_correta == letra %}selected{% endif %}>{{ letra }}</option>{% endfor %}</select></div>
-            <div class="col-md-4"><label class="form-label" for="dificuldade-{{ pergunta.id }}">Dificuldade e pontos</label><select class="form-select" id="dificuldade-{{ pergunta.id }}" name="dificuldade" required>{% for chave, rotulo, pontos in niveis_dificuldade %}<option value="{{ chave }}" {% if pergunta.dificuldade == chave %}selected{% endif %}>{{ rotulo }} · {{ pontos }} pontos</option>{% endfor %}</select></div>
-            <div class="col-md-4 align-self-end"><button class="btn btn-outline-primary" type="submit">Salvar pergunta</button></div>
-          </form>
-          <form class="mt-2" action="{{ url_for('excluir_pergunta', pergunta_id=pergunta.id) }}" method="post" onsubmit="return confirm('Excluir esta pergunta?')"><button class="btn btn-sm btn-outline-danger" type="submit">Excluir pergunta</button></form>
-        </details>
+      {% for categoria in categorias %}
+        {% set perguntas_da_categoria = perguntas_por_categoria.get(categoria.id, []) %}
+        <section class="mb-4 rounded border p-3" aria-labelledby="perguntas-categoria-{{ categoria.id }}">
+          <h3 class="h5" id="perguntas-categoria-{{ categoria.id }}">
+            {{ categoria.nome }}
+            <span class="text-secondary fs-6">{{ perguntas_da_categoria|length }} {{ 'pergunta' if perguntas_da_categoria|length == 1 else 'perguntas' }}</span>
+          </h3>
+          {% for pergunta in perguntas_da_categoria %}
+            <details class="border-bottom py-3">
+              <summary class="fw-semibold">{{ pergunta.enunciado }} <span class="text-secondary">· {{ rotulos_dificuldade.get(pergunta.dificuldade, 'Dificuldade não definida') }} · {{ pergunta.pontos }} pontos</span></summary>
+              <form class="row g-3 pt-3" action="{{ url_for('editar_pergunta', pergunta_id=pergunta.id) }}" method="post">
+                <div class="col-lg-8"><label class="form-label" for="enunciado-{{ pergunta.id }}">Enunciado</label><textarea class="form-control" id="enunciado-{{ pergunta.id }}" name="enunciado" rows="2" required>{{ pergunta.enunciado }}</textarea></div>
+                <div class="col-lg-4"><label class="form-label" for="categoria-{{ pergunta.id }}">Categoria</label><select class="form-select" id="categoria-{{ pergunta.id }}" name="categoria_id" required>{% for opcao_categoria in categorias %}<option value="{{ opcao_categoria.id }}" {% if opcao_categoria.id == pergunta.categoria_id %}selected{% endif %}>{{ opcao_categoria.nome }}</option>{% endfor %}</select></div>
+                {% for letra in ['a', 'b', 'c', 'd'] %}
+                  <div class="col-md-6"><label class="form-label" for="opcao-{{ pergunta.id }}-{{ letra }}">Alternativa {{ letra|upper }}</label><input class="form-control" id="opcao-{{ pergunta.id }}-{{ letra }}" name="opcao_{{ letra }}" value="{{ pergunta.opcoes[loop.index0] }}" required maxlength="255"></div>
+                {% endfor %}
+                <div class="col-md-4"><label class="form-label" for="correta-{{ pergunta.id }}">Resposta correta</label><select class="form-select" id="correta-{{ pergunta.id }}" name="resposta_correta">{% for letra in ['A', 'B', 'C', 'D'] %}<option value="{{ letra }}" {% if pergunta.resposta_correta == letra %}selected{% endif %}>{{ letra }}</option>{% endfor %}</select></div>
+                <div class="col-md-4"><label class="form-label" for="dificuldade-{{ pergunta.id }}">Dificuldade e pontos</label><select class="form-select" id="dificuldade-{{ pergunta.id }}" name="dificuldade" required>{% for chave, rotulo, pontos in niveis_dificuldade %}<option value="{{ chave }}" {% if pergunta.dificuldade == chave %}selected{% endif %}>{{ rotulo }} · {{ pontos }} pontos</option>{% endfor %}</select></div>
+                <div class="col-md-4 align-self-end"><button class="btn btn-outline-primary" type="submit">Salvar pergunta</button></div>
+              </form>
+              <form class="mt-2" action="{{ url_for('excluir_pergunta', pergunta_id=pergunta.id) }}" method="post" onsubmit="return confirm('Excluir esta pergunta?')"><button class="btn btn-sm btn-outline-danger" type="submit">Excluir pergunta</button></form>
+            </details>
+          {% else %}
+            <p class="mb-0 text-secondary">Nenhuma pergunta nesta categoria.</p>
+          {% endfor %}
+        </section>
       {% else %}
-        <p class="text-secondary">Nenhuma pergunta cadastrada.</p>
+        <p class="text-secondary">Nenhuma categoria cadastrada.</p>
       {% endfor %}
     </div>
   </section>

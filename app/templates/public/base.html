@@ -18,7 +18,8 @@
   {% endif %}
 </head>
 <body class="{% block body_class %}{% endblock %}{% if session.get('tipo_usuario') == 'jogador' %} player-app-shell{% endif %}">
-  {% if session.get('tipo_usuario') != 'admin' %}
+  {% set modo_teste_admin = session.get('tipo_usuario') == 'admin' and request.endpoint in ['categorias', 'quiz', 'resultado'] %}
+  {% if session.get('tipo_usuario') != 'admin' or modo_teste_admin %}
   <nav class="navbar navbar-expand-lg navbar-dark app-navbar">
     <div class="container">
       <a class="navbar-brand d-inline-flex align-items-center gap-2" href="{{ url_for('inicio') }}">
@@ -33,6 +34,7 @@
           <li class="nav-item"><a class="nav-link" href="{{ url_for('inicio') }}">Início</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ url_for('sobre') }}">Sobre o projeto</a></li>
         {% if session.get('tipo_usuario') == 'admin' %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('categorias') }}">Testar quiz</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ url_for('admin') }}">Painel admin</a></li>
         {% elif session.get('tipo_usuario') == 'jogador' %}
           <li class="nav-item"><a class="nav-link" href="{{ url_for('categorias') }}">Quiz</a></li>
@@ -71,7 +73,7 @@
     {% block content %}{% endblock %}
   </main>
 
-  {% if session.get('tipo_usuario') != 'admin' %}
+  {% if session.get('tipo_usuario') != 'admin' or modo_teste_admin %}
     <footer class="app-footer">
       <div class="container app-footer-content">
         <div>

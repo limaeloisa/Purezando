@@ -36,13 +36,17 @@
 			<div><strong>{{ (resultado.pontuacao / resultado.total)|round|int if resultado.total > 0 else 0 }}</strong><span>média de pontos</span></div>
 		</div>
 
-		{% if not resultado.persistido %}
+		{% if resultado.modo_teste %}
+			<p class="alert alert-info mt-4 mb-0" role="status">Modo de teste: esta partida não será salva no histórico nem no ranking.</p>
+		{% elif not resultado.persistido %}
 			<p class="alert alert-warning mt-4 mb-0" role="status">Sua pontuação foi exibida, mas não foi salva no ranking porque o banco está indisponível.</p>
 		{% endif %}
 
 		<div class="game-result-actions">
 			<a class="game-start-button" href="{{ url_for('categorias') }}">Jogar novamente <span aria-hidden="true">→</span></a>
-			<a class="game-ranking-link" href="{{ url_for('ranking', categoria=resultado.categoria_id) }}">Ver ranking da categoria</a>
+			{% if not resultado.modo_teste %}
+				<a class="game-ranking-link" href="{{ url_for('ranking', categoria=resultado.categoria_id) }}">Ver ranking da categoria</a>
+			{% endif %}
 		</div>
 	</div>
 </section>

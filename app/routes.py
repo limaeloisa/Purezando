@@ -48,7 +48,7 @@ def formatar_data_historico(data):
     return data.astimezone(FUSO_HORARIO_BRASILIA).strftime("%d/%m/%Y %H:%M")
 
 
-def perfil_requerido(perfil):
+def perfil_requerido(perfil, permitir_admin=False):
     def decorator(view):
         @wraps(view)
         def wrapped(*args, **kwargs):
@@ -69,7 +69,9 @@ def perfil_requerido(perfil):
             perfil_atual = usuario_atual.tipo_usuario.lower()
             session["tipo_usuario"] = perfil_atual
             session["nome_usuario"] = usuario_atual.nome_usuario
-            if perfil_atual != perfil:
+            if perfil_atual != perfil and not (
+                permitir_admin and perfil_atual == "admin"
+            ):
                 destino = "admin" if perfil_atual == "admin" else "categorias"
                 return redirect(url_for(destino))
             return view(*args, **kwargs)
@@ -215,7 +217,7 @@ def cadastro():
 
 
 @app.route("/categorias")
-@perfil_requerido("jogador")
+@perfil_requerido("jogador", permitir_admin=True)
 def categorias():
     try:
         categorias_disponiveis = (
@@ -240,7 +242,7 @@ def categorias():
 
 
 @app.route("/quiz", methods=["GET", "POST"])
-@perfil_requerido("jogador")
+@perfil_requerido("jogador", permitir_admin=True)
 def quiz():
     categoria_id = request.values.get("categoria", "")
     try:
@@ -252,12 +254,13 @@ def quiz():
                 "cultura": "Cultura",
                 "geografia": "Geografia"
             }
-            categoria_nome = nomes_legados.get(categoria_id.lower(), "Geografia")
-            categoria = Categoria.query.filter_by(nome=categoria_nome).first()
-            if categoria is None:
-                categoria = Categoria.query.order_by(Categoria.nome.asc()).first()
+            categoria_nome = nomes_legados.get(categoria_id.lower())
+            categoria = (
+                Categoria.query.filter_by(nome=categoria_nome).first()
+                if categoria_nome else None
+            )
         if categoria is None:
-            flash("Cadastre uma categoria antes de iniciar o quiz.", "error")
+            flash("Selecione uma categoria válida antes de iniciar o quiz.", "error")
             return redirect(url_for("categorias"))
 
         perguntas_db = (
@@ -313,22 +316,26 @@ def quiz():
             if resposta.isdigit() and int(resposta) == pergunta["correta"]
         )
         pontuacao_maxima = sum(pergunta["pontos"] for pergunta in perguntas)
-        persistido = True
-        try:
-            resultado = ResultadoQuiz(
-                usuario_id=session["usuario_id"],
-                categoria=categoria.nome,
-                pontuacao=pontuacao,
-                pontuacao_maxima=pontuacao_maxima,
-                acertos=acertos,
-                total_perguntas=len(perguntas)
-            )
-            db.session.add(resultado)
-            db.session.commit()
-        except SQLAlchemyError:
-            db.session.rollback()
-            app.logger.exception("Erro ao salvar resultado do quiz")
-            persistido = False
+        modo_teste = session.get("tipo_usuario") == "admin"
+        persistido = not modo_teste
+        resultado_id = None
+        if not modo_teste:
+            try:
+                resultado = ResultadoQuiz(
+                    usuario_id=session["usuario_id"],
+                    categoria=categoria.nome,
+                    pontuacao=pontuacao,
+                    pontuacao_maxima=pontuacao_maxima,
+                    acertos=acertos,
+                    total_perguntas=len(perguntas)
+                )
+                db.session.add(resultado)
+                db.session.commit()
+                resultado_id = resultado.id
+            except SQLAlchemyError:
+                db.session.rollback()
+                app.logger.exception("Erro ao salvar resultado do quiz")
+                persistido = False
 
         session["resultado_quiz"] = {
             "categoria": categoria.nome,
@@ -338,8 +345,11 @@ def quiz():
             "acertos": acertos,
             "total": len(perguntas),
             "persistido": persistido,
-            "resultado_id": resultado.id if persistido else None
+            "resultado_id": resultado_id,
+            "modo_teste": modo_teste
         }
+        if modo_teste:
+            return redirect(url_for("resultado"))
         return redirect(url_for("ranking", categoria=categoria.id))
 
     return render_template(
@@ -352,7 +362,7 @@ def quiz():
 
 
 @app.route("/resultado")
-@perfil_requerido("jogador")
+@perfil_requerido("jogador", permitir_admin=True)
 def resultado():
     resultado_atual = session.get("resultado_quiz")
     if not resultado_atual:
@@ -367,6 +377,10 @@ def admin():
         usuarios = Usuario.query.order_by(Usuario.nome_usuario.asc()).all()
         categorias_disponiveis = Categoria.query.order_by(Categoria.nome.asc()).all()
         perguntas_disponiveis = Pergunta.query.order_by(Pergunta.id.desc()).all()
+        perguntas_por_categoria = agrupar_perguntas_por_categoria(
+            categorias_disponiveis,
+            perguntas_disponiveis
+        )
         total_partidas = ResultadoQuiz.query.count()
         dialeto_banco = db.engine.dialect.name
         nome_banco = db.engine.url.database
@@ -381,6 +395,7 @@ def admin():
         usuarios = []
         categorias_disponiveis = []
         perguntas_disponiveis = []
+        perguntas_por_categoria = {}
         total_partidas = 0
         banco_ativo = None
         erro = (
@@ -396,11 +411,19 @@ def admin():
         usuarios=usuarios,
         categorias=categorias_disponiveis,
         perguntas=perguntas_disponiveis,
+        perguntas_por_categoria=perguntas_por_categoria,
         niveis_dificuldade=DIFICULDADES_QUIZ,
         total_partidas=total_partidas,
         banco_ativo=banco_ativo,
         erro=erro
     ), status_code
+
+
+def agrupar_perguntas_por_categoria(categorias, perguntas):
+    perguntas_por_categoria = {categoria.id: [] for categoria in categorias}
+    for pergunta in perguntas:
+        perguntas_por_categoria.setdefault(pergunta.categoria_id, []).append(pergunta)
+    return perguntas_por_categoria
 
 
 @app.post("/admin/usuarios/<int:usuario_id>/perfil")
@@ -623,7 +646,20 @@ def excluir_categoria(categoria_id):
     return redirect(url_for("admin"))
 
 
-def ler_pergunta_form():
+def pergunta_duplicada(enunciado, categoria_id, pergunta_id_excluida=None):
+    enunciado_normalizado = " ".join(enunciado.split()).casefold()
+    consulta = Pergunta.query.filter_by(categoria_id=categoria_id)
+    if pergunta_id_excluida is not None:
+        consulta = consulta.filter(Pergunta.id != pergunta_id_excluida)
+
+    enunciados_existentes = consulta.with_entities(Pergunta.enunciado).all()
+    return any(
+        " ".join(enunciado_existente.split()).casefold() == enunciado_normalizado
+        for (enunciado_existente,) in enunciados_existentes
+    )
+
+
+def ler_pergunta_form(pergunta_id_excluida=None):
     enunciado = request.form.get("enunciado", "").strip()
     categoria_id = request.form.get("categoria_id", "")
     opcoes = [
@@ -643,6 +679,8 @@ def ler_pergunta_form():
     categoria = db.session.get(Categoria, int(categoria_id))
     if categoria is None:
         raise ValueError("A categoria selecionada não existe.")
+    if pergunta_duplicada(enunciado, categoria.id, pergunta_id_excluida):
+        raise ValueError("Já existe uma pergunta com esse enunciado nesta categoria.")
     return (
         enunciado,
         categoria,
@@ -688,7 +726,9 @@ def editar_pergunta(pergunta_id):
         pergunta = db.session.get(Pergunta, pergunta_id)
         if pergunta is None:
             abort(404)
-        enunciado, categoria, opcoes, correta, dificuldade, pontos = ler_pergunta_form()
+        enunciado, categoria, opcoes, correta, dificuldade, pontos = ler_pergunta_form(
+            pergunta_id_excluida=pergunta.id
+        )
         pergunta.enunciado = enunciado
         pergunta.categoria_id = categoria.id
         pergunta.opcao_a = opcoes[0]

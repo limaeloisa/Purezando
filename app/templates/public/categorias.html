@@ -38,7 +38,9 @@
             {% else %}
               <span class="game-empty-button">Em breve</span>
             {% endif %}
-            <a class="game-ranking-link" href="{{ url_for('ranking', categoria=categoria.id) }}">Ver ranking da categoria</a>
+            {% if session.get('tipo_usuario') != 'admin' %}
+              <a class="game-ranking-link" href="{{ url_for('ranking', categoria=categoria.id) }}">Ver ranking da categoria</a>
+            {% endif %}
           </div>
         </article>
       {% endfor %}
